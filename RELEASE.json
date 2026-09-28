@@ -1,0 +1,24 @@
+{
+  "name": "TravAI Elite v6.5B — Autonomous Coding Team",
+  "version": "6500000000.0.0",
+  "codename": "Autonomous Coding Team",
+  "baseVersion": "6300000000.0.1",
+  "releaseType": "feature",
+  "features": [
+    "five-role governed coding team",
+    "mission decomposition and acceptance criteria",
+    "baseline verification",
+    "approval-gated implementation",
+    "regression testing",
+    "independent review",
+    "release checkpoint and rollback evidence",
+    "Elite shell and legacy backend engines preserved"
+  ],
+  "offlineFirst": true,
+  "eliteDesignPreserved": true,
+  "localhostByDefault": true,
+  "arbitraryShell": false,
+  "releasedAt": "2026-09-28",
+  "milestone": "v6.5B Autonomous Coding Team",
+  "release": "v6.5B"
+}
