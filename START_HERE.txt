@@ -1,0 +1,17 @@
+TravAI Elite v6.5B — Autonomous Coding Team
+
+1) In Terminal:
+   cd ~/Downloads/TravAI_v6500000000.0
+   npm start
+
+2) Open:
+   http://127.0.0.1:4783/?v=6500000000
+
+3) Open Autonomous Coding Team and create a mission.
+   TravAI decomposes work through Architect, Coder, Tester, Reviewer,
+   and Release Guardian roles. Consequential mutations remain approval-gated.
+
+4) Optional always-on runtime:
+   bash scripts/install-launch-agent.sh
+
+TravAI stays bound to localhost by default. No unrestricted shell execution is enabled.
