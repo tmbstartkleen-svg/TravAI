@@ -1,0 +1,17 @@
+{
+  "name": "TravAI Elite v7.0 — Daily Driver",
+  "version": "7000000000.0.0",
+  "capabilities": [
+    "Think",
+    "Code",
+    "Know",
+    "Operate",
+    "Automate",
+    "Evaluate",
+    "Recover"
+  ],
+  "offlineFirst": true,
+  "localhostByDefault": true,
+  "approvalBeforeConsequentialMutation": true,
+  "noArbitraryShell": true
+}
