@@ -1,0 +1,3 @@
+export const VERSION='9300000000.0.0';
+export const CAPABILITIES=Object.freeze(['local malware scanning','ClamAV discovery','YARA discovery','macOS security posture','file integrity monitoring','approval-gated quarantine','local connection/listener inventory','approval-gated VPN control','approval-gated HTTP/HTTPS/SOCKS proxy control','approval-gated firewall/stealth controls','Elite coding/workstation integration']);
+export const POLICY=Object.freeze({defensiveOnly:true,noRemoteHostScanning:true,noCredentialCapture:true,noStealthPersistence:true,noProctoringEvasion:true,noArbitraryShell:true,approvalBeforeNetworkChanges:true,approvalBeforeQuarantine:true});
