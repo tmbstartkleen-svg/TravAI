@@ -1,0 +1,13 @@
+{
+  "name":"TravAI Elite v9.0 - Unified Local Intelligence Runtime",
+  "version":"9000000000.0.0",
+  "v90SelfTest":"28/28",
+  "historicalDoctor":"44/44",
+  "integrityBlockedTest":"PASS",
+  "freshZipBoot":"PASS",
+  "boundedLocalExecution":true,
+  "automaticMutation":false,
+  "silentCloudFallback":false,
+  "approvalGatesPreserved":true,
+  "sha256":"f99744c92d55ee57c9ec8cc3dd38df5d49902f8802f30c54a4fa2eb701a319c2"
+}
