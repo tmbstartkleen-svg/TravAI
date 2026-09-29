@@ -1,0 +1,12 @@
+{
+  "name": "TravAI Elite v7.2 — Deployable Local AI Platform",
+  "version": "7200000000.0.0",
+  "v72SelfTest": "20/20",
+  "v71SelfTest": "32/32",
+  "historicalDoctor": "44/44",
+  "offlineCore": true,
+  "localAuthority": true,
+  "deployableControlSurface": true,
+  "browserSecrets": false,
+  "approvalGatesPreserved": true
+}
