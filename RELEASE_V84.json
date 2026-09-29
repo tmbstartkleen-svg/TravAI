@@ -1,0 +1,11 @@
+{
+  "name": "TravAI Elite v8.4 - Command Center + Workflow Consolidation",
+  "version": "8400000000.0.0",
+  "v84SelfTest": "16/16",
+  "v83SelfTest": "15/15",
+  "v82SelfTest": "20/20",
+  "v81SelfTest": "16/16",
+  "historicalDoctor": "44/44",
+  "legacyRefreshFixPreserved": true,
+  "approvalGatesPreserved": true
+}
