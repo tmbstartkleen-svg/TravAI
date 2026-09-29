@@ -1,0 +1,12 @@
+{
+  "name":"TravAI Elite v8.9 - Local Capability Orchestrator + Readiness Engine",
+  "version":"8900000000.0.0",
+  "v89SelfTest":"22/22",
+  "historicalDoctor":"44/44",
+  "integrityLockout":"PASS",
+  "freshZipBoot":"PASS",
+  "automaticMutation":false,
+  "silentCloudFallback":false,
+  "approvalGatesPreserved":true,
+  "sha256":"b3a66f083f1bceda726e1c5545374c07a464cc5c2ab6d1a386a7373cb556bad2"
+}
