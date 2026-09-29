@@ -1,0 +1,12 @@
+{
+  "name":"TravAI Elite v9.5 - Production Release",
+  "version":"9500000000.0.0",
+  "certification":"CERTIFIED",
+  "score":100,
+  "v95SelfTest":"36/36",
+  "historicalDoctor":"44/44",
+  "installerUpdateTest":"PASS",
+  "freshZipBoot":"PASS",
+  "zipIntegrity":"PASS",
+  "sha256":"122dd1829bf12e2cf99ae0b2341b659789cfc6699098c5ce8013fd5b3f6bed64"
+}
