@@ -1,0 +1,13 @@
+{
+  "name": "TravAI Elite v6.8B — Native Mac Operator + Offline Capability Expansion",
+  "version": "6800000000.0.0",
+  "offlineFirst": true,
+  "localhostByDefault": true,
+  "noArbitraryShell": true,
+  "selfTest": "32/32",
+  "v67": "24/24",
+  "v66": "22/22",
+  "v65": "24/24",
+  "v64": "20/20",
+  "historicalDoctor": "44/44"
+}
