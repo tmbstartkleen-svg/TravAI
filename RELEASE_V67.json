@@ -1,0 +1,9 @@
+{
+  "name": "TravAI Elite v6.7B — Unified Engineering Loop",
+  "version": "6700000000.0.0",
+  "base": "v6.5B complete + v6.6 capabilities incorporated",
+  "pipelineStages": 10,
+  "offlineFirst": true,
+  "approvalBeforeMutation": true,
+  "noArbitraryShell": true
+}
