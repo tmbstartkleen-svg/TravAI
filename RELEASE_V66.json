@@ -1,0 +1,12 @@
+{
+  "name": "TravAI Elite v6.6B — Repository Intelligence + Safe Patch Lab",
+  "version": "6600000000.0.0",
+  "baseVersion": "6500000000.0.0",
+  "offlineFirst": true,
+  "patchProposalReadOnly": true,
+  "approvalBeforeMutation": true,
+  "noArbitraryShell": true,
+  "selfTest": "22/22",
+  "v65Regression": "24/24",
+  "historicalDoctor": "44/44"
+}
