@@ -1,0 +1,12 @@
+{
+  "name": "TravAI Elite v8.8 - Assessment Integrity + Privacy Lab",
+  "version": "8800000000.0.0",
+  "v88SelfTest": "18/18",
+  "historicalDoctor": "44/44",
+  "proctoringBypass": false,
+  "screenCaptureEvasion": false,
+  "processHidingForAssessments": false,
+  "identitySpoofing": false,
+  "cloudMicrophoneStreaming": false,
+  "sha256": "10d5faaf01fa14bc1eba7754b7a3b4a8e3d70b52c3e5b55390836c2a2fbdf283"
+}
