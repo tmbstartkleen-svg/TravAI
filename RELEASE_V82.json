@@ -1,0 +1,11 @@
+{
+  "name": "TravAI Elite v8.2 - Security + Privacy Hardening",
+  "version": "8200000000.0.0",
+  "securitySelfTest": "20/20",
+  "v81SelfTest": "16/16",
+  "historicalDoctor": "44/44",
+  "seededUnsafeDetection": true,
+  "approvalGatesPreserved": true,
+  "secretValuesExposed": false,
+  "deploySurfacePreserved": true
+}
