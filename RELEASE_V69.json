@@ -1,0 +1,9 @@
+{
+  "name": "TravAI Elite v6.9B — Reliability + Recovery",
+  "version": "6900000000.0.0",
+  "offlineFirst": true,
+  "immutableSnapshots": true,
+  "sha256Manifests": true,
+  "approvalBeforeRestore": true,
+  "noArbitraryShell": true
+}
