@@ -1,0 +1,14 @@
+{
+  "name": "TravAI Elite v7.4 — Autonomous Agent Workspace",
+  "version": "7400000000.0.0",
+  "selfTest": "28/28",
+  "historicalDoctor": "44/44",
+  "roles": 6,
+  "taskStages": 8,
+  "persistentMissions": true,
+  "dependencyAware": true,
+  "boundedRetries": true,
+  "approvalBeforeConsequentialAction": true,
+  "deploySurfacePreserved": true,
+  "multimodalPreserved": true
+}
