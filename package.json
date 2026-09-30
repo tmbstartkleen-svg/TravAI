@@ -1,7 +1,9 @@
 {
   "name": "travai-vercel-control-surface",
-  "version": "9540000000.0.0",
+  "version": "9550000000.0.0",
   "private": true,
-  "description": "TravAI Elite v9.5.4 web-safe Vercel control surface",
-  "engines": {"node": ">=20"}
+  "description": "TravAI Elite v9.5.5 secure-pairing Vercel control surface",
+  "engines": {
+    "node": ">=20"
+  }
 }
