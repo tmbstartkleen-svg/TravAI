@@ -20,6 +20,29 @@ const TEMPLATES=Object.freeze({
       {action:'set-volume',input:{volume:50}}
     ]
   },
+  'work-wrap':{
+    id:'work-wrap',
+    label:'Work Wrap',
+    category:'productivity',
+    description:'Run a final health check, reset audio, and open Downloads for end-of-work review.',
+    steps:[
+      {action:'read-health',requiresApproval:false},
+      {action:'toggle-mute',input:{muted:false}},
+      {action:'set-volume',input:{volume:40}},
+      {action:'finder-open-path',input:{path:'~/Downloads'}}
+    ]
+  },
+  'meeting-ready':{
+    id:'meeting-ready',
+    label:'Meeting Ready',
+    category:'productivity',
+    description:'Check readiness and restore audio to a moderate level.',
+    steps:[
+      {action:'read-readiness',requiresApproval:false},
+      {action:'toggle-mute',input:{muted:false}},
+      {action:'set-volume',input:{volume:50}}
+    ]
+  },
   'work-start':{
     id:'work-start',
     label:'Work Start',
@@ -136,5 +159,6 @@ export const templatePolicy=Object.freeze({
   mutatingTemplatesRemainApprovalGated:true,
   multiStepBundles:true,
   categorizedTemplates:true,
-  workspaceRoutines:true
+  workspaceRoutines:true,
+  productivityRoutines:true
 });
