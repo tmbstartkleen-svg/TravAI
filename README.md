@@ -1,8 +1,8 @@
-# TravAI Elite v10.0.0
+# TravAI Elite v10.1.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v10.0.0 — Large Workflow Bundle
+## v10.1.0 — Smart Workspace & Routine Bundle
 v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
 
 Supported action types:
@@ -152,3 +152,13 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Larger bundles still create ordinary TravAI tasks; they do not bypass the task engine.
 - Every consequential step remains approval-gated by the existing orchestrator/executor rules.
 - Template regression coverage now verifies category metadata and larger multi-step bundle structure.
+
+
+## v10.1.0 smart workspace bundle
+- Added **Workspace Ready**: health + readiness checks followed by opening Downloads.
+- Added **Audio Reset**: unmute audio and set output volume to 50%.
+- Added **Workspace** as a Quick Action category.
+- Added live task filtering by status: pending, running, retry-pending, completed, failed, and cancelled.
+- Workspace and audio routines remain fixed, inspectable templates.
+- Mutating steps still require explicit local approval.
+- Regression coverage now includes workspace/audio templates and workspace policy metadata.
