@@ -8,6 +8,8 @@ assert.equal(items.find(x=>x.id==='mute-mac').requiresApproval,true);
 assert.equal(items.find(x=>x.id==='system-check').requiresApproval,true);
 assert.equal(items.find(x=>x.id==='work-start').category,'workflow');
 assert.equal(items.find(x=>x.id==='system-review').category,'system');
+assert.equal(items.find(x=>x.id==='workspace-ready').category,'workspace');
+assert.equal(items.find(x=>x.id==='audio-reset').category,'audio');
 
 const task=buildTaskFromTemplate('privacy-settings');
 assert.equal(task.steps[0].action,'open-system-settings-pane');
@@ -19,9 +21,14 @@ const large=buildTaskFromTemplate('work-start');
 assert.equal(large.steps.length,4);
 assert.equal(large.steps[0].action,'read-health');
 assert.equal(large.steps[3].action,'open-system-settings-pane');
+const workspace=buildTaskFromTemplate('workspace-ready');
+assert.equal(workspace.steps.length,3);
+const audio=buildTaskFromTemplate('audio-reset');
+assert.equal(audio.steps.length,2);
 await assert.rejects(async()=>buildTaskFromTemplate('missing'),/TEMPLATE_NOT_FOUND/);
 
 assert.equal(templatePolicy.fixedTemplatesOnly,true);
 assert.equal(templatePolicy.arbitraryCommands,false);
 assert.equal(templatePolicy.categorizedTemplates,true);
+assert.equal(templatePolicy.workspaceRoutines,true);
 console.log('v9.9.0 task templates: PASS');
