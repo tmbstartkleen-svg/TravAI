@@ -63,6 +63,17 @@ export function listTasks(){
   return [...tasks.values()].map(clone);
 }
 
+export function taskQueueSummary(){
+  const items=listTasks();
+  const counts={pending:0,running:0,'retry-pending':0,failed:0,completed:0,cancelled:0};
+  for(const task of items) counts[task.status]=(counts[task.status]||0)+1;
+  return {
+    total:items.length,
+    actionable:(counts.pending||0)+(counts.running||0)+(counts['retry-pending']||0)+(counts.failed||0),
+    counts
+  };
+}
+
 export function taskDiagnostics(){
   const items=listTasks();
   const byStatus={};
