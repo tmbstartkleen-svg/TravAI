@@ -1,8 +1,8 @@
 {
   "name": "travai-vercel-control-surface",
-  "version": "9760000000.0.0",
+  "version": "9770000000.0.0",
   "private": true,
-  "description": "TravAI Elite v9.7.6 persistent task state and restart resume",
+  "description": "TravAI Elite v9.7.7 task scheduler and dependency engine",
   "engines": {"node": ">=20"},
   "scripts": {
     "test:bridge": "node tests/pairing-authority-v956.test.mjs",
@@ -12,6 +12,7 @@
     "test:runtime": "node tests/runtime-mount-v974.test.mjs",
     "test:recovery": "node tests/runtime-supervisor-v975.test.mjs",
     "test:persistence": "node tests/persistent-state-v976.test.mjs",
-    "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api && npm run test:runtime && npm run test:recovery && npm run test:persistence"
+    "test:scheduler": "node tests/task-scheduler-v977.test.mjs && node tests/scheduler-loop-v977.test.mjs",
+    "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api && npm run test:runtime && npm run test:recovery && npm run test:persistence && npm run test:scheduler"
   }
 }
