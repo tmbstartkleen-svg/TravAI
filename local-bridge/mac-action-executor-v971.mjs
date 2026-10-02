@@ -74,7 +74,7 @@ export async function executeMacAction(step,{approved=false,run=defaultRun}={}){
   const action=String(step?.action||'');
   const input=step?.input && typeof step.input==='object' ? step.input : {};
   if (!ACTIONS.has(action)) throw new Error('ACTION_NOT_ALLOWED:'+action);
-  if (actionRequiresApproval(action) && step?.requiresApproval!==false && !approved) throw new Error('LOCAL_APPROVAL_REQUIRED');
+  if (actionRequiresApproval(action) && !approved) throw new Error('LOCAL_APPROVAL_REQUIRED');
 
   if (run===defaultRun) assertMac();
 
@@ -170,6 +170,7 @@ export const macActionPolicy=Object.freeze({
   pathScope:'user-home',
   settingsPaneAllowlist:Object.keys(SETTINGS_PANES),
   approvalRequiredFor:[...MUTATING_ACTIONS],
+  taskMetadataCannotDisableMutatingApproval:true,
   sipBypass:false,
   tccBypass:false,
   mdmBypass:false
