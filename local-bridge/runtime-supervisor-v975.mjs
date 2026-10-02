@@ -1,4 +1,5 @@
 import {restorePersistentState,savePersistentState} from './persistent-state-v976.mjs';
+import {startSchedulerLoop} from './scheduler-loop-v977.mjs';
 import {createMountedTaskHandler} from './runtime-mount-v974.mjs';
 
 const DEFAULT_BACKOFF_MS=[250,500,1000,2000,5000];
@@ -94,8 +95,10 @@ export async function autoMountRuntime(runtime,{run}={}){
   };
   runtime.handler=wrapped;
   runtime.travAiTaskSupervisor=supervisor;
+  const schedulerLoop=startSchedulerLoop();
+  runtime.travAiSchedulerLoop=schedulerLoop;
   await savePersistentState(supervisor.status());
-  return supervisor;
+  return Object.freeze({supervisor,schedulerLoop});
 }
 
 export const recoveryPolicy=Object.freeze({
