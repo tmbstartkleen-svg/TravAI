@@ -12,8 +12,10 @@
   }
 
   function taskMarkup(tasks=[]){
-    if(!tasks.length) return '<div class="muted">No active tasks.</div>';
-    return tasks.map(t=>{
+    const filter=qs('taskStatusFilter')?.value||'all';
+    const visible=filter==='all'?tasks:tasks.filter(t=>t.status===filter);
+    if(!visible.length) return '<div class="muted">No tasks match this status.</div>';
+    return visible.map(t=>{
       const steps=(t.steps||[]).map((s,i)=>'<div class="step"><span>'+(i+1)+'. '+esc(s.action)+'</span><span class="state '+esc(s.status||'pending')+'">'+esc(s.status||'pending')+'</span></div>').join('');
       return '<div class="task"><div class="taskhead"><strong>'+esc(t.label||t.id)+'</strong><span>'+esc(t.status||'pending')+'</span></div>'+steps+'<div class="actions"><button class="secondary cancel-task" data-id="'+esc(t.id)+'">Cancel</button></div></div>';
     }).join('');
@@ -124,5 +126,6 @@
     const btn=qs('refreshTasks'); if(btn) btn.onclick=refresh;
     const search=qs('templateSearch'); if(search) search.oninput=refresh;
     const category=qs('templateCategory'); if(category) category.onchange=refresh;
+    const taskFilter=qs('taskStatusFilter'); if(taskFilter) taskFilter.onchange=refresh;
   });
 })();
