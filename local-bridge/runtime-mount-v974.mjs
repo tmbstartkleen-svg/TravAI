@@ -60,10 +60,13 @@ export async function handleRuntimeTaskRequest(req,{run}={}){
 
     try{
       const data=await readBody(req);
-      if(step.requiresApproval!==false){
+      const readOnly=['read-health','read-readiness'].includes(step.action);
+      let approved=readOnly && step.requiresApproval!==true;
+      if(!approved){
         consumeApproval(data.approvalId,{taskId,stepId:step.id});
+        approved=true;
       }
-      const result=await runNextApprovedTaskStep(taskId,{approved:true,run});
+      const result=await runNextApprovedTaskStep(taskId,{approved,run});
       await savePersistentState();
       return response(200,{ok:!result.error,...result});
     }catch(error){
@@ -101,6 +104,7 @@ export const runtimeMountPolicy=Object.freeze({
   reusesExistingRuntime:true,
   sessionScope:'command:request',
   approvalSingleUse:true,
+  mutatingApprovalDerivedFromAction:true,
   arbitraryShell:false,
   macSecurityBypass:false
 });
