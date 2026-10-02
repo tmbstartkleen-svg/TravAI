@@ -19,6 +19,11 @@
     }).join('');
   }
 
+  function scheduleMarkup(items=[]){
+    if(!items.length) return '<div class="muted">No schedules configured.</div>';
+    return items.map(s=>'<div class="task"><div class="taskhead"><strong>'+esc(s.label||s.id)+'</strong><span>'+esc(s.status||'scheduled')+'</span></div><div class="muted">Runs: '+esc(s.runCount||0)+(s.nextRunAt?' · Next: '+new Date(s.nextRunAt).toLocaleString():'')+'</div><div class="actions">'+(s.paused?'<button class="resume-schedule" data-id="'+esc(s.id)+'">Resume</button>':'<button class="secondary pause-schedule" data-id="'+esc(s.id)+'">Pause</button>')+'<button class="secondary cancel-schedule" data-id="'+esc(s.id)+'">Cancel</button></div></div>').join('');
+  }
+
   function approvalMarkup(items=[]){
     const pending=items.filter(x=>x.status==='pending');
     if(!pending.length) return '<div class="muted">No approvals waiting.</div>';
@@ -26,23 +31,26 @@
   }
 
   async function refresh(){
-    const status=qs('taskApiStatus'), tasksEl=qs('taskList'), approvalsEl=qs('approvalList');
+    const status=qs('taskApiStatus'), tasksEl=qs('taskList'), approvalsEl=qs('approvalList'), schedulesEl=qs('scheduleList');
     if(!status||!tasksEl||!approvalsEl) return;
     try{
-      const [tasks,approvals]=await Promise.all([
+      const [tasks,approvals,schedules]=await Promise.all([
         api('/api/v974/tasks'),
-        api('/api/v974/approvals')
+        api('/api/v974/approvals'),
+        api('/api/v974/schedules')
       ]);
       status.textContent='CONNECTED';
       status.className='big ok';
       tasksEl.innerHTML=taskMarkup(tasks.tasks||[]);
       approvalsEl.innerHTML=approvalMarkup(approvals.approvals||[]);
+      if(schedulesEl) schedulesEl.innerHTML=scheduleMarkup(schedules.schedules||[]);
       bind();
     }catch(error){
       status.textContent='API UNAVAILABLE';
       status.className='big warn';
       tasksEl.innerHTML='<div class="muted">Local task API unavailable: '+esc(error.message)+'</div>';
       approvalsEl.innerHTML='<div class="muted">Approval controls appear when the local v9.7.4 API is running.</div>';
+      if(schedulesEl) schedulesEl.innerHTML='<div class="muted">Scheduler status appears when the local API is running.</div>';
     }
   }
 
@@ -66,10 +74,20 @@
     }catch(error){ alert('Cancel failed: '+error.message); }
   }
 
+  async function scheduleAction(id,action){
+    try{
+      await api('/api/v974/schedules/'+encodeURIComponent(id)+'/'+action,{method:'POST',body:'{}'});
+      await refresh();
+    }catch(error){ alert('Schedule update failed: '+error.message); }
+  }
+
   function bind(){
     document.querySelectorAll('.approve').forEach(b=>b.onclick=()=>decide(b.dataset.id,'approve'));
     document.querySelectorAll('.deny').forEach(b=>b.onclick=()=>decide(b.dataset.id,'deny'));
     document.querySelectorAll('.cancel-task').forEach(b=>b.onclick=()=>cancel(b.dataset.id));
+    document.querySelectorAll('.pause-schedule').forEach(b=>b.onclick=()=>scheduleAction(b.dataset.id,'pause'));
+    document.querySelectorAll('.resume-schedule').forEach(b=>b.onclick=()=>scheduleAction(b.dataset.id,'resume'));
+    document.querySelectorAll('.cancel-schedule').forEach(b=>b.onclick=()=>scheduleAction(b.dataset.id,'cancel'));
   }
 
   window.TravAITaskControl={refresh};
