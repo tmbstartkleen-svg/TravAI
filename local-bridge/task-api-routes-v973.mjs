@@ -1,3 +1,4 @@
+import {savePersistentState} from './persistent-state-v976.mjs';
 import crypto from 'node:crypto';
 import {createTask,listTasks,getTask,cancelTask} from './task-orchestrator-v970.mjs';
 import {createApproval,listApprovals,decideApproval} from './approval-queue-v972.mjs';
@@ -25,14 +26,14 @@ export async function handleTaskApi(req){
   if(method==='POST' && path==='/api/v973/tasks'){
     try{
       const data=await body(req);
-      return json(201,{ok:true,task:createTask({label:data.label,steps:data.steps})});
+      const task=createTask({label:data.label,steps:data.steps}); await savePersistentState(); return json(201,{ok:true,task});
     }catch(error){return json(400,{ok:false,error:error?.message||'INVALID_TASK'})}
   }
 
   const cancel=path.match(/^\/api\/v973\/tasks\/([a-f0-9]+)\/cancel$/i);
   if(method==='POST' && cancel){
     const result=cancelTask(cancel[1]);
-    return result.ok?json(200,{ok:true,result}):json(404,{ok:false,error:result.reason||'TASK_NOT_FOUND'});
+    if(result.ok) await savePersistentState(); return result.ok?json(200,{ok:true,result}):json(404,{ok:false,error:result.reason||'TASK_NOT_FOUND'});
   }
 
   const approvalFor=path.match(/^\/api\/v973\/tasks\/([a-f0-9]+)\/approval$/i);
@@ -43,6 +44,7 @@ export async function handleTaskApi(req){
     if(!step) return json(409,{ok:false,error:'NO_ACTIVE_STEP'});
     try{
       const approval=createApproval({id:newid(),taskId:task.id,stepId:step.id,action:step.action});
+      await savePersistentState();
       return json(201,{ok:true,approval});
     }catch(error){return json(400,{ok:false,error:error?.message||'APPROVAL_CREATE_FAILED'})}
   }
@@ -56,6 +58,7 @@ export async function handleTaskApi(req){
     try{
       const data=await body(req);
       const approval=decideApproval(decision[1],data.decision);
+      await savePersistentState();
       return json(200,{ok:true,approval});
     }catch(error){return json(409,{ok:false,error:error?.message||'APPROVAL_UPDATE_FAILED'})}
   }
