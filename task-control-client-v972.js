@@ -30,8 +30,8 @@
     if(!status||!tasksEl||!approvalsEl) return;
     try{
       const [tasks,approvals]=await Promise.all([
-        api('/api/v972/tasks'),
-        api('/api/v972/approvals')
+        api('/api/v973/tasks'),
+        api('/api/v973/approvals')
       ]);
       status.textContent='CONNECTED';
       status.className='big ok';
@@ -42,20 +42,20 @@
       status.textContent='API UNAVAILABLE';
       status.className='big warn';
       tasksEl.innerHTML='<div class="muted">Local task API unavailable: '+esc(error.message)+'</div>';
-      approvalsEl.innerHTML='<div class="muted">Approval controls appear when the local v9.7.2 API is running.</div>';
+      approvalsEl.innerHTML='<div class="muted">Approval controls appear when the local v9.7.3 API is running.</div>';
     }
   }
 
   async function decide(id,decision){
     try{
-      await api('/api/v972/approvals/'+encodeURIComponent(id),{method:'POST',body:JSON.stringify({decision})});
+      await api('/api/v973/approvals/'+encodeURIComponent(id),{method:'POST',body:JSON.stringify({decision})});
       await refresh();
     }catch(error){ alert('Approval update failed: '+error.message); }
   }
 
   async function cancel(id){
     try{
-      await api('/api/v972/tasks/'+encodeURIComponent(id)+'/cancel',{method:'POST',body:'{}'});
+      await api('/api/v973/tasks/'+encodeURIComponent(id)+'/cancel',{method:'POST',body:'{}'});
       await refresh();
     }catch(error){ alert('Cancel failed: '+error.message); }
   }
