@@ -13,7 +13,9 @@
 
   function taskMarkup(tasks=[]){
     const filter=qs('taskStatusFilter')?.value||'all';
-    const visible=filter==='all'?tasks:tasks.filter(t=>t.status===filter);
+    let visible=filter==='all'?tasks:tasks.filter(t=>t.status===filter);
+    const order=qs('taskSort')?.value||'newest';
+    visible=[...visible].sort((a,b)=>order==='oldest'?(a.createdAt||0)-(b.createdAt||0):(b.createdAt||0)-(a.createdAt||0));
     if(!visible.length) return '<div class="muted">No tasks match this status.</div>';
     return visible.map(t=>{
       const steps=(t.steps||[]).map((s,i)=>'<div class="step"><span>'+(i+1)+'. '+esc(s.action)+'</span><span class="state '+esc(s.status||'pending')+'">'+esc(s.status||'pending')+'</span></div>').join('');
@@ -127,5 +129,6 @@
     const search=qs('templateSearch'); if(search) search.oninput=refresh;
     const category=qs('templateCategory'); if(category) category.onchange=refresh;
     const taskFilter=qs('taskStatusFilter'); if(taskFilter) taskFilter.onchange=refresh;
+    const taskSort=qs('taskSort'); if(taskSort) taskSort.onchange=refresh;
   });
 })();
