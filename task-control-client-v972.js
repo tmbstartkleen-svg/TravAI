@@ -24,9 +24,12 @@
     return items.map(s=>'<div class="task"><div class="taskhead"><strong>'+esc(s.label||s.id)+'</strong><span>'+esc(s.status||'scheduled')+'</span></div><div class="muted">Runs: '+esc(s.runCount||0)+(s.nextRunAt?' · Next: '+new Date(s.nextRunAt).toLocaleString():'')+'</div><div class="actions">'+(s.paused?'<button class="resume-schedule" data-id="'+esc(s.id)+'">Resume</button>':'<button class="secondary pause-schedule" data-id="'+esc(s.id)+'">Pause</button>')+'<button class="secondary cancel-schedule" data-id="'+esc(s.id)+'">Cancel</button></div></div>').join('');
   }
 
+  function favoriteIds(){try{return JSON.parse(localStorage.getItem('travai_favorites')||'["health-check"]')}catch{return ['health-check']}}
+  function toggleFavorite(id){const set=new Set(favoriteIds());set.has(id)?set.delete(id):set.add(id);localStorage.setItem('travai_favorites',JSON.stringify([...set]));refresh();}
   function templateMarkup(items=[]){
     if(!items.length) return '<div class="muted">No quick actions available.</div>';
-    return items.map(t=>'<div class="task"><div class="taskhead"><strong>'+esc(t.label)+'</strong><span>'+(t.requiresApproval?'approval required':'read-only')+'</span></div><div class="muted">'+esc(t.description||'')+'</div><div class="actions"><button class="template-run" data-id="'+esc(t.id)+'">Create Task</button></div></div>').join('');
+    const fav=new Set(favoriteIds());
+    return [...items].sort((a,b)=>Number(fav.has(b.id))-Number(fav.has(a.id))).map(t=>'<div class="task"><div class="taskhead"><strong>'+(fav.has(t.id)?'★ ':'☆ ')+esc(t.label)+'</strong><span>'+(t.requiresApproval?'approval required':'read-only')+'</span></div><div class="muted">'+esc(t.description||'')+'</div><div class="actions"><button class="template-run" data-id="'+esc(t.id)+'">Create Task</button><button class="secondary template-favorite" data-id="'+esc(t.id)+'">'+(fav.has(t.id)?'Unfavorite':'Favorite')+'</button></div></div>').join('');
   }
 
   function approvalMarkup(items=[]){
@@ -107,6 +110,7 @@
     document.querySelectorAll('.resume-schedule').forEach(b=>b.onclick=()=>scheduleAction(b.dataset.id,'resume'));
     document.querySelectorAll('.cancel-schedule').forEach(b=>b.onclick=()=>scheduleAction(b.dataset.id,'cancel'));
     document.querySelectorAll('.template-run').forEach(b=>b.onclick=()=>createFromTemplate(b.dataset.id));
+    document.querySelectorAll('.template-favorite').forEach(b=>b.onclick=()=>toggleFavorite(b.dataset.id));
   }
 
   window.TravAITaskControl={refresh};
