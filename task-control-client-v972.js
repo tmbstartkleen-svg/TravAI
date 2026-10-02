@@ -14,12 +14,14 @@
   function taskMarkup(tasks=[]){
     const filter=qs('taskStatusFilter')?.value||'all';
     let visible=filter==='all'?tasks:tasks.filter(t=>t.status===filter);
+    const q=(qs('taskSearch')?.value||'').trim().toLowerCase();
+    if(q) visible=visible.filter(t=>[t.label,t.id,t.status].join(' ').toLowerCase().includes(q));
     const order=qs('taskSort')?.value||'newest';
     visible=[...visible].sort((a,b)=>order==='oldest'?(a.createdAt||0)-(b.createdAt||0):(b.createdAt||0)-(a.createdAt||0));
     if(!visible.length) return '<div class="muted">No tasks match this status.</div>';
     return visible.map(t=>{
       const steps=(t.steps||[]).map((s,i)=>'<div class="step"><span>'+(i+1)+'. '+esc(s.action)+'</span><span class="state '+esc(s.status||'pending')+'">'+esc(s.status||'pending')+'</span></div>').join('');
-      return '<div class="task"><div class="taskhead"><strong>'+esc(t.label||t.id)+'</strong><span>'+esc(t.status||'pending')+'</span></div>'+steps+'<div class="actions"><button class="secondary cancel-task" data-id="'+esc(t.id)+'">Cancel</button></div></div>';
+      return '<div class="task"><div class="taskhead"><strong>'+esc(t.label||t.id)+'</strong><span>'+esc(t.status||'pending')+'</span></div>'+steps+'<div class="actions">'+((t.status==='failed'||t.status==='retry-pending')?'<button class="retry-task" data-id="'+esc(t.id)+'">Retry</button>':'')+'<button class="secondary cancel-task" data-id="'+esc(t.id)+'">Cancel</button></div></div>';
     }).join('');
   }
 
@@ -89,6 +91,13 @@
     }catch(error){ alert('Approval/execution failed: '+error.message); }
   }
 
+  async function retry(id){
+    try{
+      await api('/api/v974/tasks/'+encodeURIComponent(id)+'/retry',{method:'POST',body:'{}'});
+      await refresh();
+    }catch(error){ alert('Retry failed: '+error.message); }
+  }
+
   async function cancel(id){
     try{
       await api('/api/v974/tasks/'+encodeURIComponent(id)+'/cancel',{method:'POST',body:'{}'});
@@ -113,6 +122,7 @@
   function bind(){
     document.querySelectorAll('.approve').forEach(b=>b.onclick=()=>decide(b.dataset.id,'approve'));
     document.querySelectorAll('.deny').forEach(b=>b.onclick=()=>decide(b.dataset.id,'deny'));
+    document.querySelectorAll('.retry-task').forEach(b=>b.onclick=()=>retry(b.dataset.id));
     document.querySelectorAll('.cancel-task').forEach(b=>b.onclick=()=>cancel(b.dataset.id));
     document.querySelectorAll('.pause-schedule').forEach(b=>b.onclick=()=>scheduleAction(b.dataset.id,'pause'));
     document.querySelectorAll('.resume-schedule').forEach(b=>b.onclick=()=>scheduleAction(b.dataset.id,'resume'));
@@ -130,5 +140,6 @@
     const category=qs('templateCategory'); if(category) category.onchange=refresh;
     const taskFilter=qs('taskStatusFilter'); if(taskFilter) taskFilter.onchange=refresh;
     const taskSort=qs('taskSort'); if(taskSort) taskSort.onchange=refresh;
+    const taskSearch=qs('taskSearch'); if(taskSearch) taskSearch.oninput=refresh;
   });
 })();
