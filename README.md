@@ -1,8 +1,8 @@
-# TravAI Elite v9.7.6
+# TravAI Elite v9.7.7
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v9.7.6 — Persistent Task State & Restart Resume
+## v9.7.7 — Task Scheduler & Dependency Engine
 v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
 
 Supported action types:
@@ -76,3 +76,14 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - An approval that was already granted before a restart is restored as pending and requires a fresh decision.
 - A task that was mid-step when the process stopped is restored to a safe pending state rather than assumed successful.
 - Runtime startup restores state before mounting the task handler, and mutations are saved after task/approval changes and step execution.
+
+
+## v9.7.7 scheduler
+- `local-bridge/task-scheduler-v977.mjs` manages delayed, recurring, paused, resumed, cancelled, and dependency-gated schedules.
+- Recurring schedules have a minimum interval of 60 seconds.
+- Schedules create normal TravAI tasks; they never execute Mac actions directly.
+- Consequential task steps still require the existing local approval flow.
+- `local-bridge/scheduler-loop-v977.mjs` advances due schedules automatically from the local runtime.
+- Schedule state is persisted alongside task/history state and survives restart.
+- The dashboard now displays schedules and exposes Pause, Resume, and Cancel controls.
+- Dependency checks can reference another schedule's most recent task or a specific task ID.
