@@ -1,8 +1,8 @@
-# TravAI Elite v10.6.0
+# TravAI Elite v10.7.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v10.6.0 — Runtime Integration & Test Bundle
+## v10.7.0 — Dashboard & Recovery Polish
 v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
 
 Supported action types:
@@ -211,3 +211,13 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Scoped approvals remain single-use and bound to the task and step.
 - Added a cross-module regression test covering tampered task metadata at the live runtime execution boundary.
 - The full npm test chain now includes restored-state and runtime-approval hardening checks.
+
+
+## v10.7.0 dashboard and recovery polish
+- Live tasks display completed-step progress as completed/total.
+- Step failures expose their bounded error message inline for faster recovery diagnosis.
+- The task toolbar shows visible versus total task counts after search/status filters.
+- Added one-click Reset Filters to restore all tasks, newest-first.
+- Offline/degraded messaging remains explicit instead of implying successful local execution.
+- No new privileged action types or approval shortcuts were introduced.
+- Added dashboard recovery regression coverage to the full test chain.
