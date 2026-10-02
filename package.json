@@ -1,15 +1,14 @@
 {
   "name": "travai-vercel-control-surface",
-  "version": "9720000000.0.0",
+  "version": "9730000000.0.0",
   "private": true,
-  "description": "TravAI Elite v9.7.2 live task control center with local approval queue",
-  "engines": {
-    "node": ">=20"
-  },
+  "description": "TravAI Elite v9.7.3 mountable local task API and live control center",
+  "engines": {"node": ">=20"},
   "scripts": {
     "test:bridge": "node tests/pairing-authority-v956.test.mjs",
     "test:agent": "node tests/task-orchestrator-v970.test.mjs",
     "test:mac": "node tests/mac-action-executor-v971.test.mjs",
-    "test": "npm run test:bridge && npm run test:agent && npm run test:mac"
+    "test:task-api": "node tests/task-api-routes-v973.test.mjs",
+    "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api"
   }
 }
