@@ -6,12 +6,14 @@ const runtime={
   handler:async()=>{baseCalls+=1; return {status:204}}
 };
 
-const supervisor=await autoMountRuntime(runtime,{
+const mounted=await autoMountRuntime(runtime,{
   run:async()=>({stdout:'',stderr:''})
 });
 
 assert.equal(typeof runtime.handler,'function');
+const supervisor=mounted.supervisor;
 assert.equal(runtime.travAiTaskSupervisor,supervisor);
+assert.equal(runtime.travAiSchedulerLoop,mounted.schedulerLoop);
 assert.equal(supervisor.status().mounted,true);
 assert.equal(supervisor.status().state,'ready');
 
@@ -40,3 +42,5 @@ assert.equal(recoveryPolicy.changesPort,false);
 assert.equal(recoveryPolicy.arbitraryShell,false);
 assert.equal(recoveryPolicy.permissionBypass,false);
 console.log('v9.7.5 runtime supervisor: PASS');
+
+mounted.schedulerLoop.stop();
