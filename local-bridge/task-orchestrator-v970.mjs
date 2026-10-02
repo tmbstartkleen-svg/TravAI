@@ -150,6 +150,20 @@ export function recordStepResult(taskId,{ok,result=null,error=null,verified=fals
   return clone(task);
 }
 
+export function retryTask(taskId){
+  const task=tasks.get(String(taskId||''));
+  if(!task) return {ok:false,reason:'TASK_NOT_FOUND'};
+  if(task.status!=='failed' && task.status!=='retry-pending') return {ok:false,reason:'TASK_NOT_RETRYABLE'};
+  const step=task.steps[task.currentStep];
+  if(!step) return {ok:false,reason:'NO_ACTIVE_STEP'};
+  step.status='pending';
+  step.error=null;
+  task.status='pending';
+  task.updatedAt=now();
+  task.history.push({at:now(),event:'task-manual-retry',stepId:step.id});
+  return {ok:true,task:clone(task)};
+}
+
 export function cancelTask(taskId){
   const task=tasks.get(String(taskId||''));
   if (!task) return {ok:false};
