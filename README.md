@@ -1,8 +1,8 @@
-# TravAI Elite v9.7.2
+# TravAI Elite v9.7.4
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v9.7.2 — Live Task Control Center
+## v9.7.4 — Runtime Integration
 v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
 
 Supported action types:
@@ -48,3 +48,12 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Approve/Deny controls are request controls only; the browser does not execute Mac actions.
 - If the local v9.7.2 API is unavailable, the dashboard reports that state instead of reporting false success.
 - Approval state remains bounded and local through `local-bridge/approval-queue-v972.mjs`.
+
+
+## v9.7.4 runtime integration
+- `local-bridge/runtime-mount-v974.mjs` plugs task routes into the existing local `127.0.0.1:4783` runtime.
+- It does not open another listener or port.
+- Requests reuse the existing short-lived `command:request` session scope.
+- Approved task steps consume one scoped approval before the local action runner proceeds.
+- The dashboard now uses the `/api/v974/...` task routes and refreshes the resulting task state.
+- Existing macOS permission checks and local security boundaries remain authoritative.
