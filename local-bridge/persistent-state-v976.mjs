@@ -3,6 +3,7 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import {exportTaskState,importTaskState} from './task-orchestrator-v970.mjs';
 import {exportApprovalState,importApprovalState} from './approval-queue-v972.mjs';
+import {exportScheduleState,importScheduleState} from './task-scheduler-v977.mjs';
 
 const DIR=path.join(os.homedir(),'.travai','state');
 const FILE=path.join(DIR,'runtime-state-v976.json');
@@ -20,6 +21,7 @@ export async function savePersistentState(extra={}){
     savedAt:Date.now(),
     tasks:exportTaskState(),
     approvals:exportApprovalState(),
+    schedules:exportScheduleState(),
     runtime:{
       state:String(extra.state||'unknown'),
       mountedAt:Number(extra.mountedAt||0),
@@ -38,6 +40,7 @@ export async function restorePersistentState(){
     const data=JSON.parse(raw);
     importTaskState(data.tasks||[]);
     importApprovalState(data.approvals||[]);
+    importScheduleState(data.schedules||[]);
     return {ok:true,restoredAt:Date.now(),savedAt:data.savedAt||0,runtime:data.runtime||{}};
   }catch(error){
     if(error?.code==='ENOENT') return {ok:true,empty:true};
