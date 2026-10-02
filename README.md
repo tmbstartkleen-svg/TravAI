@@ -1,8 +1,8 @@
-# TravAI Elite v9.7.5
+# TravAI Elite v9.7.6
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v9.7.5 — Runtime Auto-Mount & Recovery
+## v9.7.6 — Persistent Task State & Restart Resume
 v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
 
 Supported action types:
@@ -66,3 +66,13 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - The supervisor exposes local status including mount time, last success/failure, and consecutive failures.
 - Recovery never grants approvals, changes macOS permissions, or bypasses SIP/TCC/MDM.
 - After repeated failures, the supervisor reports a degraded state instead of looping indefinitely.
+
+
+## v9.7.6 persistence
+- Local state is stored atomically in `~/.travai/state/runtime-state-v976.json`.
+- The state directory/file are created with restrictive local permissions.
+- Task state, task history, approval history, and runtime recovery status are persisted.
+- Session tokens are never persisted.
+- An approval that was already granted before a restart is restored as pending and requires a fresh decision.
+- A task that was mid-step when the process stopped is restored to a safe pending state rather than assumed successful.
+- Runtime startup restores state before mounting the task handler, and mutations are saved after task/approval changes and step execution.
