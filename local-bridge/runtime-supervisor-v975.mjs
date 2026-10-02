@@ -1,3 +1,4 @@
+import {restorePersistentState,savePersistentState} from './persistent-state-v976.mjs';
 import {createMountedTaskHandler} from './runtime-mount-v974.mjs';
 
 const DEFAULT_BACKOFF_MS=[250,500,1000,2000,5000];
@@ -82,11 +83,18 @@ export function createRuntimeSupervisor({
   });
 }
 
-export function autoMountRuntime(runtime,{run}={}){
+export async function autoMountRuntime(runtime,{run}={}){
   if(!runtime || typeof runtime.handler!=='function') throw new Error('RUNTIME_HANDLER_REQUIRED');
+  await restorePersistentState();
   const supervisor=createRuntimeSupervisor({existingHandler:runtime.handler,run});
-  runtime.handler=supervisor.handler;
+  const wrapped=async(req,res)=>{
+    const result=await supervisor.handler(req,res);
+    await savePersistentState(supervisor.status());
+    return result;
+  };
+  runtime.handler=wrapped;
   runtime.travAiTaskSupervisor=supervisor;
+  await savePersistentState(supervisor.status());
   return supervisor;
 }
 
