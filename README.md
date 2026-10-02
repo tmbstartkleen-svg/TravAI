@@ -1,8 +1,8 @@
-# TravAI Elite v9.7.7
+# TravAI Elite v9.7.8
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v9.7.7 — Task Scheduler & Dependency Engine
+## v9.7.8 — Event Triggers & Conditions
 v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
 
 Supported action types:
@@ -87,3 +87,12 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Schedule state is persisted alongside task/history state and survives restart.
 - The dashboard now displays schedules and exposes Pause, Resume, and Cancel controls.
 - Dependency checks can reference another schedule's most recent task or a specific task ID.
+
+
+## v9.7.8 event triggers
+- `local-bridge/event-triggers-v978.mjs` adds bounded local condition triggers.
+- Supported conditions are limited to runtime health, user-home file existence/change, and injected app-running state.
+- File conditions are restricted to the current user's home directory.
+- Triggers create ordinary TravAI tasks and never execute Mac actions directly.
+- Consequential actions still require the existing local approval path.
+- Trigger state persists across restart.
