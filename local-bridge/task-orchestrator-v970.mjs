@@ -105,6 +105,16 @@ export function importTaskState(records=[]){
   for(const raw of Array.isArray(records)?records:[]){
     if(!raw || typeof raw!=='object' || !raw.id || !Array.isArray(raw.steps)) continue;
     const safe={...clone(raw)};
+    safe.steps=safe.steps.map((step,index)=>{
+      const restored={...clone(step)};
+      const action=String(restored.action||'');
+      if(!ALLOWED_ACTIONS.has(action)) return null;
+      restored.id=String(restored.id||('step-'+(index+1)));
+      restored.requiresApproval=['read-health','read-readiness'].includes(action) ? restored.requiresApproval===true : true;
+      return restored;
+    }).filter(Boolean);
+    if(!safe.steps.length) continue;
+    safe.currentStep=Math.max(0,Math.min(Number(safe.currentStep)||0,safe.steps.length-1));
     if(safe.status==='running') safe.status='pending';
     if(safe.steps?.[safe.currentStep]?.status==='running') safe.steps[safe.currentStep].status='pending';
     tasks.set(String(safe.id),safe);
@@ -190,6 +200,7 @@ export const autonomousPolicy = Object.freeze({
   allowlistedActionsOnly:true,
   automaticVerification:true,
   mutatingApprovalCannotBeDisabled:true,
+  restoredMutatingApprovalReenforced:true,
   boundedRetries:MAX_RETRIES,
   arbitraryShell:false,
   unrestrictedFilesystem:false,
