@@ -1,8 +1,8 @@
-# TravAI Elite v9.8.0
+# TravAI Elite v9.8.1
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v9.8.0 — Permissions & Policy Hardening
+## v9.8.1 — Final Integration & Release Validation
 v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
 
 Supported action types:
@@ -111,3 +111,10 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Read-only health/readiness steps may remain non-consequential.
 - Existing fixed-binary execution, home-directory path scope, settings-pane allowlist, and SIP/TCC/MDM protections remain unchanged.
 - Regression tests verify the approval rule cannot be bypassed by setting `requiresApproval:false`.
+
+
+## v9.8.1 release status
+- Final cross-module policy regression test added at `tests/release-validation-v981.test.mjs`.
+- A concrete Mac validation checklist is included in `RELEASE_VALIDATION_V981.md`.
+- Repository integration is release-candidate complete.
+- Production validation is intentionally not claimed until `npm test` and the local `127.0.0.1:4783` smoke checks pass on the actual TravAI Mac runtime.
