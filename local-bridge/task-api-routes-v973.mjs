@@ -1,3 +1,4 @@
+import {listTaskTemplates,buildTaskFromTemplate} from './task-templates-v990.mjs';
 import {savePersistentState} from './persistent-state-v976.mjs';
 import {createSchedule,listSchedules,pauseSchedule,resumeSchedule,cancelSchedule,tickScheduler} from './task-scheduler-v977.mjs';
 import crypto from 'node:crypto';
@@ -19,6 +20,20 @@ async function body(req){
 export async function handleTaskApi(req){
   const method=String(req.method||'GET').toUpperCase();
   const path=pathname(req);
+
+  if(method==='GET' && path==='/api/v973/templates'){
+    return json(200,{ok:true,templates:listTaskTemplates()});
+  }
+
+  const templateCreate=path.match(/^\/api\/v973\/templates\/([a-z0-9-]+)\/create$/i);
+  if(method==='POST' && templateCreate){
+    try{
+      const spec=buildTaskFromTemplate(templateCreate[1]);
+      const task=createTask(spec);
+      await savePersistentState();
+      return json(201,{ok:true,task});
+    }catch(error){return json(404,{ok:false,error:error?.message||'TEMPLATE_NOT_FOUND'})}
+  }
 
   if(method==='GET' && path==='/api/v973/diagnostics'){
     return json(200,{ok:true,diagnostics:taskDiagnostics()});
