@@ -1,4 +1,15 @@
 const TEMPLATES=Object.freeze({
+  'workspace-ready':{
+    id:'workspace-ready',
+    label:'Workspace Ready',
+    category:'workspace',
+    description:'Check TravAI health/readiness and open Downloads.',
+    steps:[
+      {action:'read-health',requiresApproval:false},
+      {action:'read-readiness',requiresApproval:false},
+      {action:'finder-open-path',input:{path:'~/Downloads'}}
+    ]
+  },
   'work-start':{
     id:'work-start',
     label:'Work Start',
