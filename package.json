@@ -1,14 +1,15 @@
 {
   "name": "travai-vercel-control-surface",
-  "version": "9700000000.0.0",
+  "version": "9710000000.0.0",
   "private": true,
-  "description": "TravAI Elite v9.7 autonomous agent expansion with secure cloud-Mac bridge",
+  "description": "TravAI Elite v9.7.1 local action executor with secure autonomous task orchestration",
   "engines": {
     "node": ">=20"
   },
   "scripts": {
     "test:bridge": "node tests/pairing-authority-v956.test.mjs",
     "test:agent": "node tests/task-orchestrator-v970.test.mjs",
-    "test": "npm run test:bridge && npm run test:agent"
+    "test:mac": "node tests/mac-action-executor-v971.test.mjs",
+    "test": "npm run test:bridge && npm run test:agent && npm run test:mac"
   }
 }
