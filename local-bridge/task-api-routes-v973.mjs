@@ -2,7 +2,7 @@ import {listTaskTemplates,buildTaskFromTemplate} from './task-templates-v990.mjs
 import {savePersistentState} from './persistent-state-v976.mjs';
 import {createSchedule,listSchedules,pauseSchedule,resumeSchedule,cancelSchedule,tickScheduler} from './task-scheduler-v977.mjs';
 import crypto from 'node:crypto';
-import {createTask,listTasks,getTask,cancelTask,taskDiagnostics} from './task-orchestrator-v970.mjs';
+import {createTask,listTasks,getTask,cancelTask,retryTask,taskDiagnostics} from './task-orchestrator-v970.mjs';
 import {createApproval,listApprovals,decideApproval} from './approval-queue-v972.mjs';
 
 const json=(status,body)=>({status,headers:{'content-type':'application/json','cache-control':'no-store'},body});
@@ -80,6 +80,13 @@ export async function handleTaskApi(req){
       const data=await body(req);
       const task=createTask({label:data.label,steps:data.steps}); await savePersistentState(); return json(201,{ok:true,task});
     }catch(error){return json(400,{ok:false,error:error?.message||'INVALID_TASK'})}
+  }
+
+  const retry=path.match(/^\/api\/v973\/tasks\/([a-f0-9]+)\/retry$/i);
+  if(method==='POST' && retry){
+    const result=retryTask(retry[1]);
+    if(result.ok) await savePersistentState();
+    return result.ok?json(200,{ok:true,...result}):json(409,{ok:false,error:result.reason||'TASK_NOT_RETRYABLE'});
   }
 
   const cancel=path.match(/^\/api\/v973\/tasks\/([a-f0-9]+)\/cancel$/i);
