@@ -27,6 +27,29 @@ export function listApprovals(){
   return [...approvals.values()].map(copy);
 }
 
+export function exportApprovalState(){
+  return listApprovals();
+}
+
+export function importApprovalState(records=[]){
+  approvals.clear();
+  const time=now();
+  for(const raw of Array.isArray(records)?records:[]){
+    if(!raw || typeof raw!=='object' || !raw.id || !raw.taskId || !raw.stepId || !raw.action) continue;
+    const item=copy(raw);
+    if(item.status==='approved'){
+      item.status='pending';
+      item.createdAt=time;
+      item.expiresAt=time+TTL_MS;
+      item.restoredRequiresFreshDecision=true;
+    }else if(item.status==='pending' && item.expiresAt<=time){
+      item.status='expired';
+    }
+    approvals.set(String(item.id),item);
+  }
+  return listApprovals();
+}
+
 export function decideApproval(id,decision){
   const item=approvals.get(String(id||''));
   if(!item || item.status!=='pending' || item.expiresAt<=now()) throw new Error('APPROVAL_NOT_PENDING');
