@@ -1,8 +1,8 @@
-# TravAI Elite v9.7.4
+# TravAI Elite v9.7.5
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v9.7.4 — Runtime Integration
+## v9.7.5 — Runtime Auto-Mount & Recovery
 v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
 
 Supported action types:
@@ -57,3 +57,12 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Approved task steps consume one scoped approval before the local action runner proceeds.
 - The dashboard now uses the `/api/v974/...` task routes and refreshes the resulting task state.
 - Existing macOS permission checks and local security boundaries remain authoritative.
+
+
+## v9.7.5 runtime supervisor
+- `local-bridge/runtime-supervisor-v975.mjs` wraps the existing local request handler during startup.
+- `autoMountRuntime(runtime)` replaces only the in-process handler reference; it does not open a new port.
+- Transient handler failures trigger bounded recovery/remount state.
+- The supervisor exposes local status including mount time, last success/failure, and consecutive failures.
+- Recovery never grants approvals, changes macOS permissions, or bypasses SIP/TCC/MDM.
+- After repeated failures, the supervisor reports a degraded state instead of looping indefinitely.
