@@ -63,6 +63,22 @@ export function listTasks(){
   return [...tasks.values()].map(clone);
 }
 
+export function exportTaskState(){
+  return listTasks();
+}
+
+export function importTaskState(records=[]){
+  tasks.clear();
+  for(const raw of Array.isArray(records)?records:[]){
+    if(!raw || typeof raw!=='object' || !raw.id || !Array.isArray(raw.steps)) continue;
+    const safe={...clone(raw)};
+    if(safe.status==='running') safe.status='pending';
+    if(safe.steps?.[safe.currentStep]?.status==='running') safe.steps[safe.currentStep].status='pending';
+    tasks.set(String(safe.id),safe);
+  }
+  return listTasks();
+}
+
 export function nextStep(taskId){
   const task=tasks.get(String(taskId||''));
   if (!task) throw new Error('TASK_NOT_FOUND');
