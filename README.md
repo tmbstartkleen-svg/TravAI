@@ -1,8 +1,8 @@
-# TravAI Elite v10.3.0
+# TravAI Elite v10.4.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v10.3.0 — Reliability & Control Bundle
+## v10.4.0 — Recovery & Queue Intelligence
 v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
 
 Supported action types:
@@ -182,3 +182,13 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Added live task search by label, ID, or status.
 - Existing bounded retry limits, approval requirements, and allowlisted action policy remain unchanged.
 - Added a dedicated reliability regression test.
+
+
+## v10.4.0 recovery and queue intelligence
+- Added a read-only task queue summary derived from local task state.
+- Queue intelligence reports total tasks, actionable workload, pending/running, retry/failed, and completed/cancelled counts.
+- Added a local read-only queue-summary API endpoint.
+- Added a dashboard Queue Intelligence card with offline/degraded messaging.
+- Existing manual retry, search, status filtering, and sorting remain available.
+- Queue intelligence cannot execute Mac actions or grant approvals.
+- Added dedicated queue-summary regression coverage.
