@@ -1,8 +1,8 @@
 {
   "name": "travai-vercel-control-surface",
-  "version": "9560000000.0.0",
+  "version": "9580000000.0.0",
   "private": true,
-  "description": "TravAI Elite v9.5.6 secure bridge authority",
+  "description": "TravAI Elite v9.5.8 end-to-end secure cloud-Mac bridge",
   "engines": {
     "node": ">=20"
   },
