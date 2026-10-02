@@ -1,8 +1,8 @@
 {
   "name": "travai-vercel-control-surface",
-  "version": "10100000000.0.0",
+  "version": "10200000000.0.0",
   "private": true,
-  "description": "TravAI Elite v10.1.0 smart workspace and routine bundle",
+  "description": "TravAI Elite v10.2.0 operations and productivity bundle",
   "engines": {"node": ">=20"},
   "scripts": {
     "test:bridge": "node tests/pairing-authority-v956.test.mjs",
