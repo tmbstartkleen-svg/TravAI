@@ -1,0 +1,36 @@
+import assert from 'node:assert/strict';
+import {autonomousPolicy} from '../local-bridge/task-orchestrator-v970.mjs';
+import {macActionPolicy} from '../local-bridge/mac-action-executor-v971.mjs';
+import {approvalPolicy} from '../local-bridge/approval-queue-v972.mjs';
+import {taskApiPolicy} from '../local-bridge/task-api-routes-v973.mjs';
+import {runtimeMountPolicy} from '../local-bridge/runtime-mount-v974.mjs';
+import {recoveryPolicy} from '../local-bridge/runtime-supervisor-v975.mjs';
+import {persistencePolicy} from '../local-bridge/persistent-state-v976.mjs';
+import {schedulerPolicy} from '../local-bridge/task-scheduler-v977.mjs';
+import {triggerPolicy} from '../local-bridge/event-triggers-v978.mjs';
+
+assert.equal(autonomousPolicy.arbitraryShell,false);
+assert.equal(autonomousPolicy.unrestrictedFilesystem,false);
+assert.equal(autonomousPolicy.mutatingApprovalCannotBeDisabled,true);
+assert.equal(macActionPolicy.shell,false);
+assert.equal(macActionPolicy.arbitraryCommand,false);
+assert.equal(macActionPolicy.taskMetadataCannotDisableMutatingApproval,true);
+assert.equal(macActionPolicy.sipBypass,false);
+assert.equal(macActionPolicy.tccBypass,false);
+assert.equal(macActionPolicy.mdmBypass,false);
+assert.equal(approvalPolicy.singleUse,true);
+assert.equal(approvalPolicy.silentApproval,false);
+assert.equal(taskApiPolicy.createsServer,false);
+assert.equal(taskApiPolicy.executesMacActions,false);
+assert.equal(runtimeMountPolicy.createsListener,false);
+assert.equal(runtimeMountPolicy.approvalSingleUse,true);
+assert.equal(recoveryPolicy.changesPort,false);
+assert.equal(recoveryPolicy.permissionBypass,false);
+assert.equal(persistencePolicy.storesSessionTokens,false);
+assert.equal(persistencePolicy.restoresApprovedAuthority,false);
+assert.equal(schedulerPolicy.executesActionsDirectly,false);
+assert.equal(schedulerPolicy.consequentialActionsStillRequireApproval,true);
+assert.equal(triggerPolicy.executesMacActions,false);
+assert.equal(triggerPolicy.consequentialActionsStillRequireApproval,true);
+
+console.log('v9.8.1 integration policy validation: PASS');
