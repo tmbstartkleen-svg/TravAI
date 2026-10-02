@@ -1,3 +1,4 @@
+import {savePersistentState} from './persistent-state-v976.mjs';
 import {authorizeSession} from './pairing-authority-v956.mjs';
 import {handleTaskApi} from './task-api-routes-v973.mjs';
 import {getTask} from './task-orchestrator-v970.mjs';
@@ -63,6 +64,7 @@ export async function handleRuntimeTaskRequest(req,{run}={}){
         consumeApproval(data.approvalId,{taskId,stepId:step.id});
       }
       const result=await runNextApprovedTaskStep(taskId,{approved:true,run});
+      await savePersistentState();
       return response(200,{ok:!result.error,...result});
     }catch(error){
       return response(409,{ok:false,error:error?.message||'EXECUTION_FAILED',task:getTask(taskId)});
