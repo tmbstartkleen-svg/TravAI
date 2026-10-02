@@ -1,7 +1,7 @@
 import {savePersistentState} from './persistent-state-v976.mjs';
 import {createSchedule,listSchedules,pauseSchedule,resumeSchedule,cancelSchedule,tickScheduler} from './task-scheduler-v977.mjs';
 import crypto from 'node:crypto';
-import {createTask,listTasks,getTask,cancelTask} from './task-orchestrator-v970.mjs';
+import {createTask,listTasks,getTask,cancelTask,taskDiagnostics} from './task-orchestrator-v970.mjs';
 import {createApproval,listApprovals,decideApproval} from './approval-queue-v972.mjs';
 
 const json=(status,body)=>({status,headers:{'content-type':'application/json','cache-control':'no-store'},body});
@@ -19,6 +19,10 @@ async function body(req){
 export async function handleTaskApi(req){
   const method=String(req.method||'GET').toUpperCase();
   const path=pathname(req);
+
+  if(method==='GET' && path==='/api/v973/diagnostics'){
+    return json(200,{ok:true,diagnostics:taskDiagnostics()});
+  }
 
   if(method==='GET' && path==='/api/v973/schedules'){
     return json(200,{ok:true,schedules:listSchedules()});
