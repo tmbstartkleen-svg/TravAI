@@ -1,8 +1,8 @@
 {
   "name": "travai-vercel-control-surface",
-  "version": "10300000000.0.0",
+  "version": "10400000000.0.0",
   "private": true,
-  "description": "TravAI Elite v10.3.0 reliability and control bundle",
+  "description": "TravAI Elite v10.4.0 recovery and queue intelligence bundle",
   "engines": {"node": ">=20"},
   "scripts": {
     "test:bridge": "node tests/pairing-authority-v956.test.mjs",
@@ -20,6 +20,7 @@
     "test:templates": "node tests/task-templates-v990.test.mjs",
     "test:favorites": "node tests/task-favorites-v991.test.mjs",
     "test:reliability-controls": "node tests/reliability-controls-v1030.test.mjs",
-    "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api && npm run test:runtime && npm run test:recovery && npm run test:persistence && npm run test:scheduler && npm run test:triggers && npm run test:diagnostics && npm run test:policy && npm run test:release && npm run test:templates && npm run test:favorites && npm run test:reliability-controls"
+    "test:queue-summary": "node tests/queue-summary-v1040.test.mjs",
+    "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api && npm run test:runtime && npm run test:recovery && npm run test:persistence && npm run test:scheduler && npm run test:triggers && npm run test:diagnostics && npm run test:policy && npm run test:release && npm run test:templates && npm run test:favorites && npm run test:reliability-controls && npm run test:queue-summary"
   }
 }
