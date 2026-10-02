@@ -1,8 +1,8 @@
-# TravAI Elite v9.7.8
+# TravAI Elite v9.7.9
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v9.7.8 — Event Triggers & Conditions
+## v9.7.9 — Observability & Diagnostics
 v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
 
 Supported action types:
@@ -96,3 +96,10 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Triggers create ordinary TravAI tasks and never execute Mac actions directly.
 - Consequential actions still require the existing local approval path.
 - Trigger state persists across restart.
+
+
+## v9.7.9 observability
+- Task diagnostics are derived from existing task state/history rather than a separate raw audit log.
+- The local diagnostics endpoint reports task totals, status counts, retries, failed/completed steps, and recent task-history events.
+- The dashboard displays a compact read-only diagnostics panel.
+- No session tokens, secrets, or raw task inputs are added to diagnostics.
