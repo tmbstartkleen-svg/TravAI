@@ -29,7 +29,11 @@
   function templateMarkup(items=[]){
     if(!items.length) return '<div class="muted">No quick actions available.</div>';
     const fav=new Set(favoriteIds());
-    return [...items].sort((a,b)=>Number(fav.has(b.id))-Number(fav.has(a.id))).map(t=>'<div class="task"><div class="taskhead"><strong>'+(fav.has(t.id)?'★ ':'☆ ')+esc(t.label)+'</strong><span>'+(t.requiresApproval?'approval required':'read-only')+'</span></div><div class="muted">'+esc(t.description||'')+'</div><div class="actions"><button class="template-run" data-id="'+esc(t.id)+'">Create Task</button><button class="secondary template-favorite" data-id="'+esc(t.id)+'">'+(fav.has(t.id)?'Unfavorite':'Favorite')+'</button></div></div>').join('');
+    const q=(qs('templateSearch')?.value||'').trim().toLowerCase();
+    const cat=qs('templateCategory')?.value||'all';
+    const filtered=items.filter(t=>(!q||[t.label,t.description,t.category].join(' ').toLowerCase().includes(q))&&(cat==='all'||t.category===cat));
+    if(!filtered.length) return '<div class="muted">No quick actions match this filter.</div>';
+    return [...filtered].sort((a,b)=>Number(fav.has(b.id))-Number(fav.has(a.id))).map(t=>'<div class="task"><div class="taskhead"><strong>'+(fav.has(t.id)?'★ ':'☆ ')+esc(t.label)+'</strong><span>'+esc(t.category||'other')+' · '+(t.requiresApproval?'approval required':'read-only')+'</span></div><div class="muted">'+esc(t.description||'')+'</div><div class="actions"><button class="template-run" data-id="'+esc(t.id)+'">Create Task</button><button class="secondary template-favorite" data-id="'+esc(t.id)+'">'+(fav.has(t.id)?'Unfavorite':'Favorite')+'</button></div></div>').join('');
   }
 
   function approvalMarkup(items=[]){
@@ -118,5 +122,7 @@
     refresh();
     setInterval(refresh,5000);
     const btn=qs('refreshTasks'); if(btn) btn.onclick=refresh;
+    const search=qs('templateSearch'); if(search) search.oninput=refresh;
+    const category=qs('templateCategory'); if(category) category.onchange=refresh;
   });
 })();
