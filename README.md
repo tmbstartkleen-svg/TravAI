@@ -1,8 +1,8 @@
-# TravAI Elite v9.7.9
+# TravAI Elite v9.8.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v9.7.9 — Observability & Diagnostics
+## v9.8.0 — Permissions & Policy Hardening
 v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
 
 Supported action types:
@@ -103,3 +103,11 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - The local diagnostics endpoint reports task totals, status counts, retries, failed/completed steps, and recent task-history events.
 - The dashboard displays a compact read-only diagnostics panel.
 - No session tokens, secrets, or raw task inputs are added to diagnostics.
+
+
+## v9.8.0 policy hardening
+- Mutating Mac actions can no longer disable approval through task metadata.
+- The executor independently fails closed when a mutating action lacks explicit approval.
+- Read-only health/readiness steps may remain non-consequential.
+- Existing fixed-binary execution, home-directory path scope, settings-pane allowlist, and SIP/TCC/MDM protections remain unchanged.
+- Regression tests verify the approval rule cannot be bypassed by setting `requiresApproval:false`.
