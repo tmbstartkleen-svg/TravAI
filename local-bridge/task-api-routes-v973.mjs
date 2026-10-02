@@ -2,7 +2,7 @@ import {listTaskTemplates,buildTaskFromTemplate} from './task-templates-v990.mjs
 import {savePersistentState} from './persistent-state-v976.mjs';
 import {createSchedule,listSchedules,pauseSchedule,resumeSchedule,cancelSchedule,tickScheduler} from './task-scheduler-v977.mjs';
 import crypto from 'node:crypto';
-import {createTask,listTasks,getTask,cancelTask,retryTask,taskDiagnostics} from './task-orchestrator-v970.mjs';
+import {createTask,listTasks,getTask,cancelTask,retryTask,taskDiagnostics,taskQueueSummary} from './task-orchestrator-v970.mjs';
 import {createApproval,listApprovals,decideApproval} from './approval-queue-v972.mjs';
 
 const json=(status,body)=>({status,headers:{'content-type':'application/json','cache-control':'no-store'},body});
@@ -33,6 +33,10 @@ export async function handleTaskApi(req){
       await savePersistentState();
       return json(201,{ok:true,task});
     }catch(error){return json(404,{ok:false,error:error?.message||'TEMPLATE_NOT_FOUND'})}
+  }
+
+  if(method==='GET' && path==='/api/v973/queue-summary'){
+    return json(200,{ok:true,summary:taskQueueSummary()});
   }
 
   if(method==='GET' && path==='/api/v973/diagnostics'){
