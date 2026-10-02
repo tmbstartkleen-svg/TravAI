@@ -31,19 +31,21 @@
   }
 
   async function refresh(){
-    const status=qs('taskApiStatus'), tasksEl=qs('taskList'), approvalsEl=qs('approvalList'), schedulesEl=qs('scheduleList');
+    const status=qs('taskApiStatus'), tasksEl=qs('taskList'), approvalsEl=qs('approvalList'), schedulesEl=qs('scheduleList'), diagEl=qs('diagnosticList');
     if(!status||!tasksEl||!approvalsEl) return;
     try{
-      const [tasks,approvals,schedules]=await Promise.all([
+      const [tasks,approvals,schedules,diagnostics]=await Promise.all([
         api('/api/v974/tasks'),
         api('/api/v974/approvals'),
-        api('/api/v974/schedules')
+        api('/api/v974/schedules'),
+        api('/api/v974/diagnostics')
       ]);
       status.textContent='CONNECTED';
       status.className='big ok';
       tasksEl.innerHTML=taskMarkup(tasks.tasks||[]);
       approvalsEl.innerHTML=approvalMarkup(approvals.approvals||[]);
       if(schedulesEl) schedulesEl.innerHTML=scheduleMarkup(schedules.schedules||[]);
+      if(diagEl){const d=diagnostics.diagnostics||{};diagEl.innerHTML='<div class="muted">Tasks: '+esc(d.totalTasks||0)+' · Retries: '+esc(d.retries||0)+' · Failed steps: '+esc(d.failedSteps||0)+' · Completed steps: '+esc(d.completedSteps||0)+'</div>'+(d.recentHistory||[]).slice(0,10).map(x=>'<div class="step"><span>'+esc(x.label||x.taskId)+' · '+esc(x.event)+'</span><span>'+new Date(x.at).toLocaleTimeString()+'</span></div>').join('');}
       bind();
     }catch(error){
       status.textContent='API UNAVAILABLE';
@@ -51,6 +53,7 @@
       tasksEl.innerHTML='<div class="muted">Local task API unavailable: '+esc(error.message)+'</div>';
       approvalsEl.innerHTML='<div class="muted">Approval controls appear when the local v9.7.4 API is running.</div>';
       if(schedulesEl) schedulesEl.innerHTML='<div class="muted">Scheduler status appears when the local API is running.</div>';
+      if(diagEl) diagEl.innerHTML='<div class="muted">Diagnostics unavailable while the local API is offline.</div>';
     }
   }
 
