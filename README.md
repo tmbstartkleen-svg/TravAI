@@ -1,8 +1,8 @@
-# TravAI Elite v10.5.0
+# TravAI Elite v10.6.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v10.5.0 — Security Hardening & State Recovery
+## v10.6.0 — Runtime Integration & Test Bundle
 v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
 
 Supported action types:
@@ -202,3 +202,12 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - A task restored while running returns to pending, and a running active step returns to pending.
 - Restored current-step indexes are clamped to the validated step list.
 - Added a regression test covering legacy/tampered persisted task state.
+
+
+## v10.6.0 runtime integration and test bundle
+- Runtime execution now derives approval requirements independently from the action class.
+- Mutating actions cannot become implicitly approved because persisted or in-memory task metadata says otherwise.
+- Read-only health/readiness actions may execute without a consequential-action approval unless explicitly configured to require one.
+- Scoped approvals remain single-use and bound to the task and step.
+- Added a cross-module regression test covering tampered task metadata at the live runtime execution boundary.
+- The full npm test chain now includes restored-state and runtime-approval hardening checks.
