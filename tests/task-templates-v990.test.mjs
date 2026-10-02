@@ -5,9 +5,14 @@ const items=listTaskTemplates();
 assert.equal(items.some(x=>x.id==='health-check'),true);
 assert.equal(items.find(x=>x.id==='health-check').requiresApproval,false);
 assert.equal(items.find(x=>x.id==='mute-mac').requiresApproval,true);
+assert.equal(items.find(x=>x.id==='system-check').requiresApproval,true);
 
 const task=buildTaskFromTemplate('privacy-settings');
 assert.equal(task.steps[0].action,'open-system-settings-pane');
+const bundle=buildTaskFromTemplate('system-check');
+assert.equal(bundle.steps.length,3);
+assert.equal(bundle.steps[0].action,'read-health');
+assert.equal(bundle.steps[2].action,'open-system-settings-pane');
 await assert.rejects(async()=>buildTaskFromTemplate('missing'),/TEMPLATE_NOT_FOUND/);
 
 assert.equal(templatePolicy.fixedTemplatesOnly,true);
