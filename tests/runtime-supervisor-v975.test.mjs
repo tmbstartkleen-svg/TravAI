@@ -6,7 +6,7 @@ const runtime={
   handler:async()=>{baseCalls+=1; return {status:204}}
 };
 
-const supervisor=autoMountRuntime(runtime,{
+const supervisor=await autoMountRuntime(runtime,{
   run:async()=>({stdout:'',stderr:''})
 });
 
