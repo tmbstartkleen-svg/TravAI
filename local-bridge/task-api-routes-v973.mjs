@@ -1,4 +1,5 @@
 import {savePersistentState} from './persistent-state-v976.mjs';
+import {createSchedule,listSchedules,pauseSchedule,resumeSchedule,cancelSchedule,tickScheduler} from './task-scheduler-v977.mjs';
 import crypto from 'node:crypto';
 import {createTask,listTasks,getTask,cancelTask} from './task-orchestrator-v970.mjs';
 import {createApproval,listApprovals,decideApproval} from './approval-queue-v972.mjs';
@@ -18,6 +19,38 @@ async function body(req){
 export async function handleTaskApi(req){
   const method=String(req.method||'GET').toUpperCase();
   const path=pathname(req);
+
+  if(method==='GET' && path==='/api/v973/schedules'){
+    return json(200,{ok:true,schedules:listSchedules()});
+  }
+
+  if(method==='POST' && path==='/api/v973/schedules'){
+    try{
+      const data=await body(req);
+      const schedule=createSchedule(data);
+      await savePersistentState();
+      return json(201,{ok:true,schedule});
+    }catch(error){return json(400,{ok:false,error:error?.message||'INVALID_SCHEDULE'})}
+  }
+
+  const scheduleAction=path.match(/^\/api\/v973\/schedules\/([a-f0-9]+)\/(pause|resume|cancel)$/i);
+  if(method==='POST' && scheduleAction){
+    try{
+      const data=await body(req);
+      const [,scheduleId,action]=scheduleAction;
+      const result=action==='pause'?pauseSchedule(scheduleId):action==='resume'?resumeSchedule(scheduleId,data):cancelSchedule(scheduleId);
+      if(!result.ok) return json(404,{ok:false,error:result.reason||'SCHEDULE_NOT_FOUND'});
+      await savePersistentState();
+      return json(200,{ok:true,...result});
+    }catch(error){return json(400,{ok:false,error:error?.message||'SCHEDULE_ACTION_FAILED'})}
+  }
+
+  if(method==='POST' && path==='/api/v973/scheduler/tick'){
+    const data=await body(req);
+    const result=tickScheduler(data.time==null?Date.now():Number(data.time));
+    await savePersistentState();
+    return json(200,{ok:true,...result});
+  }
 
   if(method==='GET' && path==='/api/v973/tasks'){
     return json(200,{ok:true,tasks:listTasks()});
