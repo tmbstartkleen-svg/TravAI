@@ -1,8 +1,8 @@
-# TravAI Elite v9.8.1
+# TravAI Elite v9.9.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v9.8.1 — Final Integration & Release Validation
+## v9.9.0 — Task Composer & Quick Actions
 v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
 
 Supported action types:
@@ -118,3 +118,12 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - A concrete Mac validation checklist is included in `RELEASE_VALIDATION_V981.md`.
 - Repository integration is release-candidate complete.
 - Production validation is intentionally not claimed until `npm test` and the local `127.0.0.1:4783` smoke checks pass on the actual TravAI Mac runtime.
+
+
+## v9.9.0 quick actions
+- `local-bridge/task-templates-v990.mjs` provides fixed, inspectable task templates.
+- Initial templates include Health Check, Open Privacy Settings, Mute Mac, and Open Downloads.
+- Templates create ordinary TravAI tasks; they do not execute Mac actions directly.
+- Mutating templates remain subject to the normal explicit local approval flow.
+- The dashboard displays quick actions and creates template tasks through the existing local API.
+- No arbitrary shell command or unrestricted task composer is introduced.
