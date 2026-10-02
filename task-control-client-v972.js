@@ -30,8 +30,8 @@
     if(!status||!tasksEl||!approvalsEl) return;
     try{
       const [tasks,approvals]=await Promise.all([
-        api('/api/v973/tasks'),
-        api('/api/v973/approvals')
+        api('/api/v974/tasks'),
+        api('/api/v974/approvals')
       ]);
       status.textContent='CONNECTED';
       status.className='big ok';
@@ -42,20 +42,26 @@
       status.textContent='API UNAVAILABLE';
       status.className='big warn';
       tasksEl.innerHTML='<div class="muted">Local task API unavailable: '+esc(error.message)+'</div>';
-      approvalsEl.innerHTML='<div class="muted">Approval controls appear when the local v9.7.3 API is running.</div>';
+      approvalsEl.innerHTML='<div class="muted">Approval controls appear when the local v9.7.4 API is running.</div>';
     }
   }
 
   async function decide(id,decision){
     try{
-      await api('/api/v973/approvals/'+encodeURIComponent(id),{method:'POST',body:JSON.stringify({decision})});
+      const updated=await api('/api/v974/approvals/'+encodeURIComponent(id),{method:'POST',body:JSON.stringify({decision})});
+      if(decision==='approve' && updated.approval){
+        await api('/api/v974/tasks/'+encodeURIComponent(updated.approval.taskId)+'/execute',{
+          method:'POST',
+          body:JSON.stringify({approvalId:updated.approval.id})
+        });
+      }
       await refresh();
-    }catch(error){ alert('Approval update failed: '+error.message); }
+    }catch(error){ alert('Approval/execution failed: '+error.message); }
   }
 
   async function cancel(id){
     try{
-      await api('/api/v973/tasks/'+encodeURIComponent(id)+'/cancel',{method:'POST',body:'{}'});
+      await api('/api/v974/tasks/'+encodeURIComponent(id)+'/cancel',{method:'POST',body:'{}'});
       await refresh();
     }catch(error){ alert('Cancel failed: '+error.message); }
   }
