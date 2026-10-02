@@ -1,8 +1,8 @@
-# TravAI Elite v9.9.0
+# TravAI Elite v9.9.1
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v9.9.0 — Task Composer & Quick Actions
+## v9.9.1 — Quick Action Favorites
 v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
 
 Supported action types:
@@ -127,3 +127,10 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Mutating templates remain subject to the normal explicit local approval flow.
 - The dashboard displays quick actions and creates template tasks through the existing local API.
 - No arbitrary shell command or unrestricted task composer is introduced.
+
+
+## v9.9.1 favorites
+- Quick-action templates can be favorited from the dashboard.
+- Favorites are browser-local preferences and only reference fixed template IDs.
+- Favoriting does not grant approval or change task execution permissions.
+- The fixed-template execution path from v9.9.0 remains unchanged.
