@@ -10,6 +10,16 @@ const TEMPLATES=Object.freeze({
       {action:'finder-open-path',input:{path:'~/Downloads'}}
     ]
   },
+  'audio-reset':{
+    id:'audio-reset',
+    label:'Audio Reset',
+    category:'audio',
+    description:'Unmute Mac audio and set output volume to 50%.',
+    steps:[
+      {action:'toggle-mute',input:{muted:false}},
+      {action:'set-volume',input:{volume:50}}
+    ]
+  },
   'work-start':{
     id:'work-start',
     label:'Work Start',
@@ -125,5 +135,6 @@ export const templatePolicy=Object.freeze({
   arbitraryCommands:false,
   mutatingTemplatesRemainApprovalGated:true,
   multiStepBundles:true,
-  categorizedTemplates:true
+  categorizedTemplates:true,
+  workspaceRoutines:true
 });
