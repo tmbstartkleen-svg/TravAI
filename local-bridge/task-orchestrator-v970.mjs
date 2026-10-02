@@ -63,6 +63,28 @@ export function listTasks(){
   return [...tasks.values()].map(clone);
 }
 
+export function taskDiagnostics(){
+  const items=listTasks();
+  const byStatus={};
+  let retries=0, failures=0, completedSteps=0;
+  for(const task of items){
+    byStatus[task.status]=(byStatus[task.status]||0)+1;
+    for(const step of task.steps||[]){
+      retries+=Math.max(0,(step.attempts||0)-1);
+      if(step.status==='failed') failures+=1;
+      if(step.status==='completed') completedSteps+=1;
+    }
+  }
+  return {
+    totalTasks:items.length,
+    byStatus,
+    retries,
+    failedSteps:failures,
+    completedSteps,
+    recentHistory:items.flatMap(t=>(t.history||[]).slice(-5).map(h=>({taskId:t.id,label:t.label,event:h.event,at:h.at}))).sort((a,b)=>b.at-a.at).slice(0,50)
+  };
+}
+
 export function exportTaskState(){
   return listTasks();
 }
