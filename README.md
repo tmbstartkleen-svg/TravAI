@@ -1,29 +1,33 @@
-# TravAI Elite v9.7
+# TravAI Elite v9.7.1
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v9.7 — Autonomous Agent Expansion
-- Multi-step task plans with explicit step state.
-- Allowlisted local actions only.
-- Verification-aware execution.
-- Bounded retry/recovery logic.
-- Task history and cancellation.
-- Consequential actions remain local-approval gated.
-- No arbitrary shell execution, unrestricted filesystem access, security-boundary bypass, or silent cloud fallback.
+## v9.7.1 — Local Action Executor
+v9.7.1 connects the v9.7 task orchestrator to a bounded macOS action executor.
 
-## Architecture
-- **Mac-local runtime:** authoritative TravAI server at `127.0.0.1:4783`, local models, workspace, security controls, recovery, and privileged operations.
-- **Vercel control surface:** public dashboard only. It does not host Ollama, local files, secrets, privileged Mac operations, or unrestricted shell execution.
-- **Bridge model:** remote requests require a scoped authenticated bridge and explicit local approval for consequential mutations.
-- **Agent orchestrator:** `local-bridge/task-orchestrator-v970.mjs` tracks multi-step tasks, retries, verification state, and completion locally.
+Supported action types:
+- Read local health and readiness.
+- Open or quit a named Mac application.
+- Open approved System Settings panes.
+- Set output volume or mute state.
+- Open a Finder path limited to the current user's home directory.
+- Run a named Apple Shortcut.
+
+The executor uses Node `execFile` with fixed Apple binaries and argument arrays. It never constructs a general shell command. Mutating actions require local approval unless the task explicitly classifies a step as non-consequential.
+
+## Agent execution
+- `local-bridge/task-orchestrator-v970.mjs` — plans, state, retries, cancellation.
+- `local-bridge/mac-action-executor-v971.mjs` — validated macOS actions.
+- `local-bridge/task-runner-v971.mjs` — runs one approved task step and records verification/results.
 
 ## Safety boundaries
-- No arbitrary shell execution from the public web surface.
-- No unrestricted filesystem control.
+- No arbitrary shell execution.
+- No arbitrary command binary selection.
+- Finder path operations are constrained to the user's home directory.
+- System Settings panes use an allowlist.
+- No SIP, TCC, MDM, admin-authentication, or other Apple security bypass.
 - No silent cloud fallback.
-- No automatic security mutation or SIP/TCC/MDM bypass.
-- Assessment Integrity remains authoritative in the local runtime.
-- Local paths, raw private workspace content, and secrets are not published by the control surface.
+- Consequential actions remain subject to local approval.
 
 ## Tests
 Run:
@@ -32,7 +36,7 @@ Run:
 npm test
 ```
 
-This executes both the secure pairing authority regression test and the v9.7 autonomous task orchestrator test.
+This runs pairing-authority, task-orchestrator, and Mac-action-executor regression tests.
 
 ## Vercel
-`vercel.json` serves `vercel-index.html` as the web-safe production control surface and applies restrictive browser security headers.
+The Vercel surface remains a control/request interface. Actual Mac actions execute only in the local TravAI runtime on macOS.
