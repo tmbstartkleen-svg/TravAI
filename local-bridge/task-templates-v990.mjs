@@ -24,6 +24,25 @@ const TEMPLATES=Object.freeze({
       {action:'toggle-mute',input:{muted:true}}
     ]
   },
+  'system-check':{
+    id:'system-check',
+    label:'System Check',
+    description:'Run health/readiness checks, then open Privacy & Security for review.',
+    steps:[
+      {action:'read-health',requiresApproval:false},
+      {action:'read-readiness',requiresApproval:false},
+      {action:'open-system-settings-pane',input:{pane:'privacy-security'}}
+    ]
+  },
+  'quiet-work':{
+    id:'quiet-work',
+    label:'Quiet Work',
+    description:'Mute Mac audio and open Downloads for a focused local workflow.',
+    steps:[
+      {action:'toggle-mute',input:{muted:true}},
+      {action:'finder-open-path',input:{path:'~/Downloads'}}
+    ]
+  },
   'open-downloads':{
     id:'open-downloads',
     label:'Open Downloads',
@@ -52,5 +71,6 @@ export function buildTaskFromTemplate(templateId){
 export const templatePolicy=Object.freeze({
   fixedTemplatesOnly:true,
   arbitraryCommands:false,
-  mutatingTemplatesRemainApprovalGated:true
+  mutatingTemplatesRemainApprovalGated:true,
+  multiStepBundles:true
 });
