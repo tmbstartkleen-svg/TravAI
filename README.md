@@ -1,9 +1,9 @@
-# TravAI Elite v9.7.1
+# TravAI Elite v9.7.2
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v9.7.1 — Local Action Executor
-v9.7.1 connects the v9.7 task orchestrator to a bounded macOS action executor.
+## v9.7.2 — Live Task Control Center
+v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
 
 Supported action types:
 - Read local health and readiness.
@@ -40,3 +40,11 @@ This runs pairing-authority, task-orchestrator, and Mac-action-executor regressi
 
 ## Vercel
 The Vercel surface remains a control/request interface. Actual Mac actions execute only in the local TravAI runtime on macOS.
+
+
+## Live Task Control Center
+- `task-control-client-v972.js` polls the local task and approval endpoints.
+- The dashboard renders task status, step status, retries/errors, cancellation, and pending approvals.
+- Approve/Deny controls are request controls only; the browser does not execute Mac actions.
+- If the local v9.7.2 API is unavailable, the dashboard reports that state instead of reporting false success.
+- Approval state remains bounded and local through `local-bridge/approval-queue-v972.mjs`.
