@@ -49,15 +49,16 @@
   }
 
   async function refresh(){
-    const status=qs('taskApiStatus'), tasksEl=qs('taskList'), approvalsEl=qs('approvalList'), schedulesEl=qs('scheduleList'), diagEl=qs('diagnosticList'), templatesEl=qs('templateList');
+    const status=qs('taskApiStatus'), tasksEl=qs('taskList'), approvalsEl=qs('approvalList'), schedulesEl=qs('scheduleList'), diagEl=qs('diagnosticList'), templatesEl=qs('templateList'), queueEl=qs('queueSummary');
     if(!status||!tasksEl||!approvalsEl) return;
     try{
-      const [tasks,approvals,schedules,diagnostics,templates]=await Promise.all([
+      const [tasks,approvals,schedules,diagnostics,templates,queue]=await Promise.all([
         api('/api/v974/tasks'),
         api('/api/v974/approvals'),
         api('/api/v974/schedules'),
         api('/api/v974/diagnostics'),
-        api('/api/v974/templates')
+        api('/api/v974/templates'),
+        api('/api/v974/queue-summary')
       ]);
       status.textContent='CONNECTED';
       status.className='big ok';
@@ -66,6 +67,7 @@
       if(schedulesEl) schedulesEl.innerHTML=scheduleMarkup(schedules.schedules||[]);
       if(diagEl){const d=diagnostics.diagnostics||{};diagEl.innerHTML='<div class="muted">Tasks: '+esc(d.totalTasks||0)+' · Retries: '+esc(d.retries||0)+' · Failed steps: '+esc(d.failedSteps||0)+' · Completed steps: '+esc(d.completedSteps||0)+'</div>'+(d.recentHistory||[]).slice(0,10).map(x=>'<div class="step"><span>'+esc(x.label||x.taskId)+' · '+esc(x.event)+'</span><span>'+new Date(x.at).toLocaleTimeString()+'</span></div>').join('');}
       if(templatesEl) templatesEl.innerHTML=templateMarkup(templates.templates||[]);
+      if(queueEl){const s=queue.summary||{},x=s.counts||{};queueEl.innerHTML='<div class="step"><span>Total tasks</span><strong>'+esc(s.total||0)+'</strong></div><div class="step"><span>Needs attention</span><strong>'+esc(s.actionable||0)+'</strong></div><div class="step"><span>Pending / Running</span><span>'+esc(x.pending||0)+' / '+esc(x.running||0)+'</span></div><div class="step"><span>Retry / Failed</span><span>'+esc(x['retry-pending']||0)+' / '+esc(x.failed||0)+'</span></div><div class="step"><span>Completed / Cancelled</span><span>'+esc(x.completed||0)+' / '+esc(x.cancelled||0)+'</span></div>';}
       bind();
     }catch(error){
       status.textContent='API UNAVAILABLE';
@@ -75,6 +77,7 @@
       if(schedulesEl) schedulesEl.innerHTML='<div class="muted">Scheduler status appears when the local API is running.</div>';
       if(diagEl) diagEl.innerHTML='<div class="muted">Diagnostics unavailable while the local API is offline.</div>';
       if(templatesEl) templatesEl.innerHTML='<div class="muted">Quick actions unavailable while the local API is offline.</div>';
+      if(queueEl) queueEl.innerHTML='<div class="muted">Queue summary unavailable while the local API is offline.</div>';
     }
   }
 
