@@ -10,6 +10,8 @@ assert.equal(items.find(x=>x.id==='work-start').category,'workflow');
 assert.equal(items.find(x=>x.id==='system-review').category,'system');
 assert.equal(items.find(x=>x.id==='workspace-ready').category,'workspace');
 assert.equal(items.find(x=>x.id==='audio-reset').category,'audio');
+assert.equal(items.find(x=>x.id==='work-wrap').category,'productivity');
+assert.equal(items.find(x=>x.id==='meeting-ready').category,'productivity');
 
 const task=buildTaskFromTemplate('privacy-settings');
 assert.equal(task.steps[0].action,'open-system-settings-pane');
@@ -25,10 +27,15 @@ const workspace=buildTaskFromTemplate('workspace-ready');
 assert.equal(workspace.steps.length,3);
 const audio=buildTaskFromTemplate('audio-reset');
 assert.equal(audio.steps.length,2);
+const wrap=buildTaskFromTemplate('work-wrap');
+assert.equal(wrap.steps.length,4);
+const meeting=buildTaskFromTemplate('meeting-ready');
+assert.equal(meeting.steps.length,3);
 await assert.rejects(async()=>buildTaskFromTemplate('missing'),/TEMPLATE_NOT_FOUND/);
 
 assert.equal(templatePolicy.fixedTemplatesOnly,true);
 assert.equal(templatePolicy.arbitraryCommands,false);
 assert.equal(templatePolicy.categorizedTemplates,true);
 assert.equal(templatePolicy.workspaceRoutines,true);
+assert.equal(templatePolicy.productivityRoutines,true);
 console.log('v9.9.0 task templates: PASS');
