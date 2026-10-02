@@ -1,8 +1,8 @@
-# TravAI Elite v10.4.0
+# TravAI Elite v10.5.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v10.4.0 — Recovery & Queue Intelligence
+## v10.5.0 — Security Hardening & State Recovery
 v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
 
 Supported action types:
@@ -192,3 +192,13 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Existing manual retry, search, status filtering, and sorting remain available.
 - Queue intelligence cannot execute Mac actions or grant approvals.
 - Added dedicated queue-summary regression coverage.
+
+
+## v10.5.0 security hardening and state recovery
+- Restored task state is revalidated against the current action allowlist before it is accepted.
+- Unknown or obsolete restored actions are discarded rather than trusted.
+- Every restored consequential action has `requiresApproval` forced back to `true`, even if legacy/tampered state stored it as false.
+- Read-only health/readiness steps retain their explicit approval setting.
+- A task restored while running returns to pending, and a running active step returns to pending.
+- Restored current-step indexes are clamped to the validated step list.
+- Added a regression test covering legacy/tampered persisted task state.
