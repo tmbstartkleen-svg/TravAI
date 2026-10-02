@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {createPairingRequest,listPairingRequests,approvePairingRequest,authorizeSession,revokeSession,bridgePolicy} from '../local-bridge/pairing-authority-v956.mjs';
+const id='0123456789abcdef0123456789abcdef';
+createPairingRequest({requestId:id,label:'test'});
+assert.equal(listPairingRequests().some(x=>x.id===id&&x.status==='pending'),true);
+const s=approvePairingRequest(id,['health:read','command:request','evil:scope']);
+assert.deepEqual(s.scopes,['health:read','command:request']);
+assert.equal(authorizeSession(s.sessionToken,'health:read').ok,true);
+assert.equal(authorizeSession(s.sessionToken,'readiness:read').ok,false);
+assert.equal(revokeSession(s.sessionToken).ok,true);
+assert.equal(authorizeSession(s.sessionToken,'health:read').ok,false);
+assert.equal(bridgePolicy.arbitraryShell,false);
+assert.equal(bridgePolicy.automaticSecurityMutation,false);
+console.log('v9.5.6 pairing authority: PASS');
