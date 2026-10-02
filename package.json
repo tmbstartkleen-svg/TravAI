@@ -1,8 +1,8 @@
 {
   "name": "travai-vercel-control-surface",
-  "version": "9790000000.0.0",
+  "version": "9800000000.0.0",
   "private": true,
-  "description": "TravAI Elite v9.7.9 task diagnostics and observability",
+  "description": "TravAI Elite v9.8.0 permissions and policy hardening",
   "engines": {"node": ">=20"},
   "scripts": {
     "test:bridge": "node tests/pairing-authority-v956.test.mjs",
@@ -15,6 +15,7 @@
     "test:scheduler": "node tests/task-scheduler-v977.test.mjs && node tests/scheduler-loop-v977.test.mjs",
     "test:triggers": "node tests/event-triggers-v978.test.mjs",
     "test:diagnostics": "node tests/diagnostics-v979.test.mjs",
-    "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api && npm run test:runtime && npm run test:recovery && npm run test:persistence && npm run test:scheduler && npm run test:triggers && npm run test:diagnostics"
+    "test:policy": "node tests/policy-hardening-v980.test.mjs",
+    "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api && npm run test:runtime && npm run test:recovery && npm run test:persistence && npm run test:scheduler && npm run test:triggers && npm run test:diagnostics && npm run test:policy"
   }
 }
