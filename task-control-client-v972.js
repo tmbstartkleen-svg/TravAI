@@ -18,10 +18,12 @@
     if(q) visible=visible.filter(t=>[t.label,t.id,t.status].join(' ').toLowerCase().includes(q));
     const order=qs('taskSort')?.value||'newest';
     visible=[...visible].sort((a,b)=>order==='oldest'?(a.createdAt||0)-(b.createdAt||0):(b.createdAt||0)-(a.createdAt||0));
-    if(!visible.length) return '<div class="muted">No tasks match this status.</div>';
+    const count=qs('taskVisibleCount'); if(count) count.textContent=visible.length+' / '+tasks.length+' tasks';
+    if(!visible.length) return '<div class="muted">No tasks match the current filters.</div>';
     return visible.map(t=>{
-      const steps=(t.steps||[]).map((s,i)=>'<div class="step"><span>'+(i+1)+'. '+esc(s.action)+'</span><span class="state '+esc(s.status||'pending')+'">'+esc(s.status||'pending')+'</span></div>').join('');
-      return '<div class="task"><div class="taskhead"><strong>'+esc(t.label||t.id)+'</strong><span>'+esc(t.status||'pending')+'</span></div>'+steps+'<div class="actions">'+((t.status==='failed'||t.status==='retry-pending')?'<button class="retry-task" data-id="'+esc(t.id)+'">Retry</button>':'')+'<button class="secondary cancel-task" data-id="'+esc(t.id)+'">Cancel</button></div></div>';
+      const all=t.steps||[], completed=all.filter(s=>s.status==='completed').length;
+      const steps=all.map((s,i)=>'<div class="step"><span>'+(i+1)+'. '+esc(s.action)+(s.error?' · '+esc(s.error):'')+'</span><span class="state '+esc(s.status||'pending')+'">'+esc(s.status||'pending')+'</span></div>').join('');
+      return '<div class="task"><div class="taskhead"><strong>'+esc(t.label||t.id)+'</strong><span>'+esc(t.status||'pending')+' · '+completed+'/'+all.length+' steps</span></div>'+steps+'<div class="actions">'+((t.status==='failed'||t.status==='retry-pending')?'<button class="retry-task" data-id="'+esc(t.id)+'">Retry</button>':'')+'<button class="secondary cancel-task" data-id="'+esc(t.id)+'">Cancel</button></div></div>';
     }).join('');
   }
 
@@ -144,5 +146,6 @@
     const taskFilter=qs('taskStatusFilter'); if(taskFilter) taskFilter.onchange=refresh;
     const taskSort=qs('taskSort'); if(taskSort) taskSort.onchange=refresh;
     const taskSearch=qs('taskSearch'); if(taskSearch) taskSearch.oninput=refresh;
+    const reset=qs('resetTaskFilters'); if(reset) reset.onclick=()=>{if(taskSearch)taskSearch.value='';if(taskFilter)taskFilter.value='all';if(taskSort)taskSort.value='newest';refresh();};
   });
 })();
