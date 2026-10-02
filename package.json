@@ -1,8 +1,8 @@
 {
   "name": "travai-vercel-control-surface",
-  "version": "9920000000.0.0",
+  "version": "10000000000.0.0",
   "private": true,
-  "description": "TravAI Elite v9.9.2 fixed multi-step task bundles",
+  "description": "TravAI Elite v10.0.0 large workflow bundle and quick action organization",
   "engines": {"node": ">=20"},
   "scripts": {
     "test:bridge": "node tests/pairing-authority-v956.test.mjs",
