@@ -1,9 +1,9 @@
-# TravAI Elite v10.7.0
+# TravAI Elite v10.8.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v10.7.0 — Dashboard & Recovery Polish
-v9.7.2 adds a live dashboard layer on top of the bounded macOS action executor and local approval queue.
+## v10.8.0 — Security & Persistence Finalization
+TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
 - Read local health and readiness.
@@ -221,3 +221,12 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Offline/degraded messaging remains explicit instead of implying successful local execution.
 - No new privileged action types or approval shortcuts were introduced.
 - Added dashboard recovery regression coverage to the full test chain.
+
+
+## v10.8.0 security and persistence finalization
+- Restored approved or consumed approval records are downgraded to pending and require a fresh local decision.
+- Restored authority timestamps are cleared before the approval can be reconsidered.
+- Favorites now validate dynamically against the current fixed template catalog instead of a stale hardcoded subset.
+- Current workspace/productivity templates can be safely favorited while unknown template IDs remain rejected.
+- Added approval-restore regression coverage and expanded favorites regression coverage.
+- Session tokens remain excluded from persistent state and consequential actions remain locally approval-gated.
