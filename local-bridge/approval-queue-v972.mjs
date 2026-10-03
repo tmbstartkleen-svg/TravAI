@@ -37,10 +37,12 @@ export function importApprovalState(records=[]){
   for(const raw of Array.isArray(records)?records:[]){
     if(!raw || typeof raw!=='object' || !raw.id || !raw.taskId || !raw.stepId || !raw.action) continue;
     const item=copy(raw);
-    if(item.status==='approved'){
+    if(item.status==='approved' || item.status==='consumed'){
       item.status='pending';
       item.createdAt=time;
       item.expiresAt=time+TTL_MS;
+      delete item.decidedAt;
+      delete item.consumedAt;
       item.restoredRequiresFreshDecision=true;
     }else if(item.status==='pending' && item.expiresAt<=time){
       item.status='expired';
@@ -72,5 +74,6 @@ export const approvalPolicy=Object.freeze({
   ttlMs:TTL_MS,
   singleUse:true,
   explicitDecision:true,
-  silentApproval:false
+  silentApproval:false,
+  restoredAuthorityRequiresFreshDecision:true
 });
