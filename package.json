@@ -1,8 +1,8 @@
 {
   "name": "travai-vercel-control-surface",
-  "version": "10700000000.0.0",
+  "version": "10800000000.0.0",
   "private": true,
-  "description": "TravAI Elite v10.7.0 dashboard and recovery polish bundle",
+  "description": "TravAI Elite v10.8.0 security and persistence finalization bundle",
   "engines": {"node": ">=20"},
   "scripts": {
     "test:bridge": "node tests/pairing-authority-v956.test.mjs",
@@ -24,6 +24,7 @@
     "test:restored-state": "node tests/restored-state-hardening-v1050.test.mjs",
     "test:runtime-approval": "node tests/runtime-approval-v1060.test.mjs",
     "test:dashboard-recovery": "node tests/dashboard-recovery-v1070.test.mjs",
-    "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api && npm run test:runtime && npm run test:recovery && npm run test:persistence && npm run test:scheduler && npm run test:triggers && npm run test:diagnostics && npm run test:policy && npm run test:release && npm run test:templates && npm run test:favorites && npm run test:reliability-controls && npm run test:queue-summary && npm run test:restored-state && npm run test:runtime-approval && npm run test:dashboard-recovery"
+    "test:approval-restore": "node tests/approval-restore-v1080.test.mjs",
+    "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api && npm run test:runtime && npm run test:recovery && npm run test:persistence && npm run test:scheduler && npm run test:triggers && npm run test:diagnostics && npm run test:policy && npm run test:release && npm run test:templates && npm run test:favorites && npm run test:reliability-controls && npm run test:queue-summary && npm run test:restored-state && npm run test:runtime-approval && npm run test:dashboard-recovery && npm run test:approval-restore"
   }
 }
