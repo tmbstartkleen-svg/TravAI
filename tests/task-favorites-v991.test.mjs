@@ -3,6 +3,9 @@ import {listFavorites,setFavorite,favoritePolicy} from '../local-bridge/task-fav
 assert.equal(listFavorites().includes('health-check'),true);
 assert.equal(setFavorite('mute-mac',true).ok,true);
 assert.equal(listFavorites().includes('mute-mac'),true);
+assert.equal(setFavorite('workspace-ready',true).ok,true);
+assert.equal(setFavorite('work-wrap',true).ok,true);
 assert.equal(setFavorite('unknown',true).ok,false);
+assert.equal(favoritePolicy.dynamicTemplateCatalog,true);
 assert.equal(favoritePolicy.arbitraryActions,false);
-console.log('v9.9.1 favorites: PASS');
+console.log('v10.8.0 favorites catalog sync: PASS');
