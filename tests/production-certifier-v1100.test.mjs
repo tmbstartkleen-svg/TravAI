@@ -22,4 +22,12 @@ assert.equal(missing.productionValidated,false);
 assert.equal(certificationPolicy.storesSessionTokens,false);
 assert.equal(certificationPolicy.storesApprovalIds,false);
 assert.equal(certificationPolicy.failClosed,true);
-console.log('v11.0.0 production certifier: PASS');
+
+import fs from 'node:fs/promises';
+const harness=await fs.readFile(new URL('../certify-local-v1140.mjs',import.meta.url),'utf8');
+assert.equal(harness.includes("evidenceSources"),true);
+assert.equal(harness.includes("manual-local-evidence"),true);
+assert.equal(harness.includes("tests/runtime-approval-v1060.test.mjs"),true);
+assert.equal(harness.includes("tests/approval-restore-v1080.test.mjs"),true);
+
+console.log('v11.4.0 production certifier: PASS');
