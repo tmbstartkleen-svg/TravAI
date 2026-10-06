@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+const workflow=await readFile(new URL('../.github/workflows/deploy-pages.yml',import.meta.url),'utf8');
+const dashboard=await readFile(new URL('../vercel-index.html',import.meta.url),'utf8');
+const client=await readFile(new URL('../task-control-client-v972.js',import.meta.url),'utf8');
+assert.equal(workflow.includes('actions/upload-artifact@v4'),true);
+assert.equal(workflow.includes('actions/deploy-pages'),false);
+assert.equal(workflow.includes('vercel'),false);
+assert.equal(dashboard.includes('TravAI Elite'),true);
+assert.equal(client.includes('127.0.0.1:4783'),true);
+console.log('v11.7.0 hosting independence: PASS');
