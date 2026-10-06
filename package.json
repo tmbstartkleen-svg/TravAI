@@ -1,8 +1,8 @@
 {
   "name": "travai-vercel-control-surface",
-  "version": "11000000000.0.0",
+  "version": "11100000000.0.0",
   "private": true,
-  "description": "TravAI Elite v11.0.0 production runtime certification",
+  "description": "TravAI Elite v11.1.0 certification automation and release evidence",
   "engines": {
     "node": ">=20"
   },
@@ -29,6 +29,7 @@
     "test:approval-restore": "node tests/approval-restore-v1080.test.mjs",
     "test:release-consistency": "node tests/release-consistency-v1090.test.mjs",
     "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api && npm run test:runtime && npm run test:recovery && npm run test:persistence && npm run test:scheduler && npm run test:triggers && npm run test:diagnostics && npm run test:policy && npm run test:release && npm run test:templates && npm run test:favorites && npm run test:reliability-controls && npm run test:queue-summary && npm run test:restored-state && npm run test:runtime-approval && npm run test:dashboard-recovery && npm run test:approval-restore && npm run test:release-consistency && npm run test:production-certifier",
-    "test:production-certifier": "node tests/production-certifier-v1100.test.mjs"
+    "test:production-certifier": "node tests/production-certifier-v1100.test.mjs",
+    "certify:local": "node certify-local-v1110.mjs"
   }
 }
