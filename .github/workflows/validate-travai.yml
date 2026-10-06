@@ -50,6 +50,8 @@ jobs:
           - test:release-health
           - test:readiness
           - test:self-diagnostics
+          - test:runtime-ensure
+          - test:cert-history
     steps:
       - name: Checkout
         uses: actions/checkout@v4
