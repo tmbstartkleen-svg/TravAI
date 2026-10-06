@@ -49,6 +49,8 @@ jobs:
           - test:release-attestation
           - test:verify-release
           - test:release-health
+          - test:readiness
+          - test:self-diagnostics
     steps:
       - name: Checkout
         uses: actions/checkout@v4
