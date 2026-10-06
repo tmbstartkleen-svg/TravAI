@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import {loadReleaseIdentity,identityPolicy} from '../local-bridge/runtime-identity-v1160.mjs';
+const pkg=JSON.parse(await fs.readFile(new URL('../package.json',import.meta.url),'utf8'));
+const id=await loadReleaseIdentity();
+assert.equal(id.packageVersion,pkg.version);
+assert.equal(identityPolicy.exactPackageBinding,true);
+assert.equal(identityPolicy.releaseDerivedFromPackage,true);
+assert.equal('token' in id,false);
+assert.equal('approval' in id,false);
+console.log('v12.1.0 self diagnostics contract: PASS');
