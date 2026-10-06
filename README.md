@@ -1,8 +1,8 @@
-# TravAI Elite v11.9.0
+# TravAI Elite v12.0.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v11.9.0 — Verified Artifact Integrity
+## v12.0.0 — Attested Portable Releases & Release Health
 TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
@@ -320,3 +320,12 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - The integrity verifier detects file changes after an artifact is built, independent of the static hosting provider.
 - Integrity metadata is secret-free and requires no signing key or cloud-provider credential.
 - Regression coverage verifies an unchanged bundle passes and a tampered bundle fails.
+
+
+## v12.0.0 attested portable releases
+- Portable artifacts now contain release identity, SHA-256 file integrity, and a deterministic release attestation binding version, commit, runtime authority, and integrity metadata.
+- Added `npm run release:verify -- <directory>` to validate a downloaded or deployed portable bundle end to end.
+- Added `npm run release:health` to summarize local package version, runtime status, and latest production certification state.
+- Runtime human-readable release identity is derived from the encoded package version instead of a stale literal.
+- CI now exposes release-stack checks independently so failures are diagnosable instead of hidden inside one composite job.
+- Hosting remains provider-independent; Vercel, GitHub Pages, Cloudflare Pages, Netlify, or another static host can serve the same verified bundle.
