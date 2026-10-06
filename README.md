@@ -1,8 +1,8 @@
-# TravAI Elite v11.6.0
+# TravAI Elite v11.7.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v11.6.0 — Runtime Identity & Certification Binding
+## v11.7.0 — Hosting Independence & Release Health
 TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
@@ -299,3 +299,10 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - The workflow publishes `vercel-index.html` as `index.html` together with the task-control client on each push to `main`.
 - Vercel remains optional; TravAI release validation and the local Mac runtime do not depend on Vercel availability.
 - Local Mac authority remains on `127.0.0.1:4783`; the hosted surface only requests local actions through the existing bounded runtime.
+
+
+## v11.7.0 hosting independence
+- Every main-branch release builds and verifies a portable static control-surface artifact.
+- Core release health no longer depends on Vercel quotas or GitHub Pages repository configuration.
+- The static bundle can be published by any ordinary static host while the privileged runtime remains local on 127.0.0.1:4783.
+- Hosting-independence regression coverage prevents provider-specific deployment code from becoming a core release dependency.
