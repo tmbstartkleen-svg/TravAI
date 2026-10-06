@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import {certificationHistory} from '../certification-history-v1220.mjs';
+const dir=await fs.mkdtemp(path.join(os.tmpdir(),'travai-certs-'));
+await fs.writeFile(path.join(dir,'production-2026-01-01.json'),JSON.stringify({generatedAt:'2026-01-01T00:00:00Z',productionValidated:true,releaseIdentity:{packageVersion:'1'}}));
+await fs.writeFile(path.join(dir,'production-2026-01-02.json'),JSON.stringify({generatedAt:'2026-01-02T00:00:00Z',productionValidated:false,releaseIdentity:{packageVersion:'2'}}));
+const rows=await certificationHistory({directory:dir,limit:5});
+assert.equal(rows.length,2);
+assert.equal(rows[0].packageVersion,'2');
+assert.equal(rows[1].productionValidated,true);
+console.log('v12.2.0 certification history: PASS');
