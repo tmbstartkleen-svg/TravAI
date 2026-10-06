@@ -30,6 +30,8 @@ jobs:
           test -s _site/release.json
           node --input-type=module -e "import {buildIntegrityManifest} from './release-integrity-v1190.mjs'; import fs from 'node:fs'; const m=await buildIntegrityManifest('_site'); fs.writeFileSync('_site/integrity.json',JSON.stringify(m,null,2)+'\\n')"
           test -s _site/integrity.json
+          node --input-type=module -e "import {buildReleaseAttestation} from './release-attestation-v1200.mjs'; import fs from 'node:fs'; const a=await buildReleaseAttestation('_site'); fs.writeFileSync('_site/attestation.json',JSON.stringify(a,null,2)+'\\n')"
+          test -s _site/attestation.json
       - name: Upload portable artifact
         uses: actions/upload-artifact@v4
         with:
