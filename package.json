@@ -1,8 +1,8 @@
 {
   "name": "travai-vercel-control-surface",
-  "version": "11400000000.0.0",
+  "version": "11500000000.0.0",
   "private": true,
-  "description": "TravAI Elite v11.4.0 automated certification harness",
+  "description": "TravAI Elite v11.5.0 runtime lifecycle and self-diagnostics",
   "engines": {
     "node": ">=20"
   },
@@ -29,9 +29,11 @@
     "test:approval-restore": "node tests/approval-restore-v1080.test.mjs",
     "test:release-consistency": "node tests/release-consistency-v1090.test.mjs",
     "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api && npm run test:runtime && npm run test:recovery && npm run test:persistence && npm run test:scheduler && npm run test:triggers && npm run test:diagnostics && npm run test:policy && npm run test:release && npm run test:templates && npm run test:favorites && npm run test:reliability-controls && npm run test:queue-summary && npm run test:restored-state && npm run test:runtime-approval && npm run test:dashboard-recovery && npm run test:approval-restore && npm run test:release-consistency && npm run test:production-certifier",
-    "test:production-certifier": "node tests/production-certifier-v1100.test.mjs && node tests/local-runtime-v1120.test.mjs",
+    "test:production-certifier": "node tests/production-certifier-v1100.test.mjs && node tests/local-runtime-v1120.test.mjs && node tests/runtime-lifecycle-v1150.test.mjs",
     "certify:local": "node certify-local-v1140.mjs",
     "runtime": "node local-runtime-v1120.mjs",
+    "runtime:status": "node runtime-status-v1150.mjs",
+    "test:runtime-lifecycle": "node tests/runtime-lifecycle-v1150.test.mjs",
     "test:local-runtime": "node tests/local-runtime-v1120.test.mjs"
   }
 }
