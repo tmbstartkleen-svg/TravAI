@@ -28,6 +28,8 @@ jobs:
           grep -q "TravAI Elite" _site/index.html
           node -e "const p=require('./package.json'); require('fs').writeFileSync('_site/release.json', JSON.stringify({service:'travai-control-surface',packageVersion:p.version,commit:process.env.GITHUB_SHA,artifact:'portable-static',runtimeAuthority:'http://127.0.0.1:4783'},null,2)+'\\n')"
           test -s _site/release.json
+          node --input-type=module -e "import {buildIntegrityManifest} from './release-integrity-v1190.mjs'; import fs from 'node:fs'; const m=await buildIntegrityManifest('_site'); fs.writeFileSync('_site/integrity.json',JSON.stringify(m,null,2)+'\\n')"
+          test -s _site/integrity.json
       - name: Upload portable artifact
         uses: actions/upload-artifact@v4
         with:
