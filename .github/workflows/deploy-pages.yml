@@ -26,6 +26,8 @@ jobs:
           test -s _site/index.html
           test -s _site/task-control-client-v972.js
           grep -q "TravAI Elite" _site/index.html
+          node -e "const p=require('./package.json'); require('fs').writeFileSync('_site/release.json', JSON.stringify({service:'travai-control-surface',packageVersion:p.version,commit:process.env.GITHUB_SHA,artifact:'portable-static',runtimeAuthority:'http://127.0.0.1:4783'},null,2)+'\\n')"
+          test -s _site/release.json
       - name: Upload portable artifact
         uses: actions/upload-artifact@v4
         with:
