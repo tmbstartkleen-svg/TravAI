@@ -14,6 +14,31 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        script:
+          - test:bridge
+          - test:agent
+          - test:mac
+          - test:task-api
+          - test:runtime
+          - test:recovery
+          - test:persistence
+          - test:scheduler
+          - test:triggers
+          - test:diagnostics
+          - test:policy
+          - test:release
+          - test:templates
+          - test:favorites
+          - test:reliability-controls
+          - test:queue-summary
+          - test:restored-state
+          - test:runtime-approval
+          - test:dashboard-recovery
+          - test:approval-restore
+          - test:release-consistency
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,16 +46,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Run full regression suite
-        id: tests
-        run: npm test
-      - name: Publish regression status
-        if: always()
+      - name: Run component test and publish status
         env:
           GH_TOKEN: ${{ github.token }}
-          OUTCOME: ${{ steps.tests.outcome }}
           SHA: ${{ github.sha }}
           REPO: ${{ github.repository }}
+          SCRIPT: ${{ matrix.script }}
         run: |
-          if [ "$OUTCOME" = "success" ]; then STATE=success; DESC="Full TravAI regression suite passed"; else STATE=failure; DESC="Full TravAI regression suite failed"; fi
-          curl -sS -X POST             -H "Authorization: Bearer $GH_TOKEN"             -H "Accept: application/vnd.github+json"             "https://api.github.com/repos/$REPO/statuses/$SHA"             -d "{\"state\":\"$STATE\",\"context\":\"TravAI Regression Suite\",\"description\":\"$DESC\"}"
+          set +e
+          OUTPUT="$(npm run "$SCRIPT" 2>&1)"
+          CODE=$?
+          printf '%s\n' "$OUTPUT"
+          DESC="$(printf '%s' "$OUTPUT" | tail -n 4 | tr '\n' ' ' | tr -s ' ' | cut -c1-120)"
+          if [ "$CODE" -eq 0 ]; then STATE=success; else STATE=failure; fi
+          curl -sS -X POST             -H "Authorization: Bearer $GH_TOKEN"             -H "Accept: application/vnd.github+json"             "https://api.github.com/repos/$REPO/statuses/$SHA"             -d "{\"state\":\"$STATE\",\"context\":\"TravAI/$SCRIPT\",\"description\":\"$DESC\"}"
+          exit "$CODE"
