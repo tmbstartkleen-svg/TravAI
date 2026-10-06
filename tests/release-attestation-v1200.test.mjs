@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import {buildReleaseAttestation,verifyReleaseAttestation,attestationPolicy} from '../release-attestation-v1200.mjs';
+const dir=await fs.mkdtemp(path.join(os.tmpdir(),'travai-attest-'));
+await fs.writeFile(path.join(dir,'release.json'),JSON.stringify({service:'travai-control-surface',packageVersion:'12000000000.0.0',commit:'abc123',artifact:'portable-static',runtimeAuthority:'http://127.0.0.1:4783'}));
+await fs.writeFile(path.join(dir,'integrity.json'),JSON.stringify({algorithm:'sha256',files:{'index.html':'a'.repeat(64)}}));
+const a=await buildReleaseAttestation(dir);
+assert.equal(verifyReleaseAttestation(a),true);
+const tampered=structuredClone(a);tampered.subject.commit='evil';
+assert.equal(verifyReleaseAttestation(tampered),false);
+assert.equal(attestationPolicy.hostIndependent,true);
+assert.equal(attestationPolicy.secretFree,true);
+console.log('v12.0.0 release attestation: PASS');
