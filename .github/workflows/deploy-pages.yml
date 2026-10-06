@@ -1,4 +1,4 @@
-name: Deploy TravAI Control Surface
+name: Build TravAI Control Surface
 
 on:
   push:
@@ -7,33 +7,28 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: github-pages
+  group: travai-static-surface
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build-static:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Prepare static site
+      - name: Prepare portable static site
         run: |
           mkdir -p _site
           cp vercel-index.html _site/index.html
           cp task-control-client-v972.js _site/task-control-client-v972.js
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+          test -s _site/index.html
+          test -s _site/task-control-client-v972.js
+          grep -q "TravAI Elite" _site/index.html
+      - name: Upload portable artifact
+        uses: actions/upload-artifact@v4
         with:
+          name: travai-control-surface
           path: _site
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          retention-days: 14
