@@ -1,8 +1,8 @@
-# TravAI Elite v11.7.0
+# TravAI Elite v11.8.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v11.7.0 — Hosting Independence & Release Health
+## v11.8.0 — Portable Release Manifest & Deployment Readiness
 TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
@@ -306,3 +306,10 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Core release health no longer depends on Vercel quotas or GitHub Pages repository configuration.
 - The static bundle can be published by any ordinary static host while the privileged runtime remains local on 127.0.0.1:4783.
 - Hosting-independence regression coverage prevents provider-specific deployment code from becoming a core release dependency.
+
+
+## v11.8.0 portable release manifest
+- Every portable control-surface artifact now includes a secret-free `release.json` manifest.
+- The manifest identifies the package version, exact Git commit, portable artifact type, and local runtime authority.
+- This gives any static hosting provider a deterministic release identity without making the provider part of TravAI's trust boundary.
+- Portable-release regression coverage verifies the manifest is generated on every artifact build.
