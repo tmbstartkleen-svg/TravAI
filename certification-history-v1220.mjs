@@ -9,7 +9,7 @@ export async function certificationHistory({directory=path.join(os.homedir(),'.t
     for(const file of files){
       try{
         const data=JSON.parse(await fs.readFile(path.join(directory,file),'utf8'));
-        rows.push({file,generatedAt:data.generatedAt||null,version:data.version||data.releaseIdentity?.release||null,packageVersion:data.releaseIdentity?.packageVersion||null,productionValidated:data.productionValidated===true});
+        rows.push({file,generatedAt:data.generatedAt||null,version:data.version||data.releaseIdentity?.release||null,packageVersion:data.releaseIdentity?.packageVersion||null,productionValidated:data.productionValidated===true,protocol:data.releaseIdentity?.protocol||null,raw:data});
       }catch{}
     }
     return rows;
