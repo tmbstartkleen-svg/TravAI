@@ -1,8 +1,8 @@
-# TravAI Elite v11.8.0
+# TravAI Elite v11.9.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v11.8.0 — Portable Release Manifest & Deployment Readiness
+## v11.9.0 — Verified Artifact Integrity
 TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
@@ -313,3 +313,10 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - The manifest identifies the package version, exact Git commit, portable artifact type, and local runtime authority.
 - This gives any static hosting provider a deterministic release identity without making the provider part of TravAI's trust boundary.
 - Portable-release regression coverage verifies the manifest is generated on every artifact build.
+
+
+## v11.9.0 verified artifact integrity
+- Portable releases now include `integrity.json` with SHA-256 hashes for the control surface files.
+- The integrity verifier detects file changes after an artifact is built, independent of the static hosting provider.
+- Integrity metadata is secret-free and requires no signing key or cloud-provider credential.
+- Regression coverage verifies an unchanged bundle passes and a tampered bundle fails.
