@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict';
-import {loadReleaseIdentity,identityMatches,identityPolicy} from '../local-bridge/runtime-identity-v1160.mjs';
+import {loadReleaseIdentity,identityMatches,identityPolicy,decodeTravAIVersion} from '../local-bridge/runtime-identity-v1160.mjs';
 const id=await loadReleaseIdentity();
 assert.equal(id.service,'travai-local-runtime');
-assert.match(id.release,/^11\.\d+\.0$/);
+assert.equal(id.release,decodeTravAIVersion(id.packageVersion));
 assert.equal(id.protocol,'travai-local/v1');
 assert.equal(identityMatches(id,{...id}),true);
 assert.equal(identityMatches({...id,packageVersion:'old'},id),false);
 assert.equal(identityPolicy.secretFree,true);
 assert.equal(identityPolicy.includesSessionToken,false);
 assert.equal(identityPolicy.includesApprovalAuthority,false);
-console.log('v11.6.0 runtime identity binding: PASS');
+assert.equal(identityPolicy.releaseDerivedFromPackage,true);
+console.log('runtime identity binding: PASS');
