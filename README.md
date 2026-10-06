@@ -292,3 +292,10 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Identity regression tests reject mismatched package versions.
 - Identity metadata contains no session token, approval authority, or secret material.
 - An already-running older runtime is not treated as upgraded until it is restarted from the newer checkout.
+
+
+## Hosting resilience
+- GitHub Pages is configured as a static fallback control-surface host from `.github/workflows/deploy-pages.yml`.
+- The workflow publishes `vercel-index.html` as `index.html` together with the task-control client on each push to `main`.
+- Vercel remains optional; TravAI release validation and the local Mac runtime do not depend on Vercel availability.
+- Local Mac authority remains on `127.0.0.1:4783`; the hosted surface only requests local actions through the existing bounded runtime.
