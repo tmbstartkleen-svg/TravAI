@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+const source=await fs.readFile(new URL('../local-runtime-v1120.mjs',import.meta.url),'utf8');
+assert.equal(source.includes("const HOST='127.0.0.1'"),true);
+assert.equal(source.includes('const PORT=4783'),true);
+assert.equal(source.includes("createMountedTaskHandler"),true);
+assert.equal(source.includes("0.0.0.0"),false);
+assert.equal(source.includes("exec("),false);
+assert.equal(source.includes("spawn("),false);
+assert.equal(source.includes("shell:true"),false);
+console.log('v11.2.0 local runtime host policy: PASS');
