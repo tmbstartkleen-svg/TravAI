@@ -1,8 +1,8 @@
-# TravAI Elite v11.3.0
+# TravAI Elite v11.4.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v11.3.0 — Live Runtime Smoke Certification
+## v11.4.0 — Automated Certification Harness
 TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
@@ -268,3 +268,11 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - The local-runtime boundary test is included in the production-certifier CI command.
 - Vercel remains only the web control surface; local execution remains authoritative and approval-gated.
 - Production validation still requires the actual Mac runtime and explicit evidence for consequential-action checks.
+
+
+## v11.4.0 automated certification harness
+- `npm run certify:local` now runs the v11.4 evidence harness.
+- Live runtime health is combined with existing hardened regression proofs for pairing scope, approval blocking, restart authority reset, scheduling, dashboard recovery, diagnostics, and execution boundaries.
+- Certification records identify each check's evidence source instead of storing raw responses or credentials.
+- Optional manual local evidence remains explicit; the harness does not self-approve consequential Mac actions.
+- Certification remains fail-closed when required evidence is unavailable.
