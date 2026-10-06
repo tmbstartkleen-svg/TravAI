@@ -7,6 +7,7 @@ import {schedulerPolicy} from './local-bridge/task-scheduler-v977.mjs';
 import {approvalPolicy} from './local-bridge/approval-queue-v972.mjs';
 import {persistencePolicy} from './local-bridge/persistent-state-v976.mjs';
 import {loadReleaseIdentity,identityPolicy} from './local-bridge/runtime-identity-v1160.mjs';
+import {certificationReleaseMetadata} from './local-bridge/certification-identity-v1230.mjs';
 
 const run=promisify(execFile);
 const checks={};
@@ -31,8 +32,9 @@ checks['readonly-task']=probe.ok&&runtimeMountPolicy.sessionScope==='command:req
 const manual=process.env.TRAVAI_CERT_EVIDENCE||'';
 if(manual){try{const supplied=JSON.parse(await fs.readFile(manual,'utf8'));for(const [key,value] of Object.entries(supplied)){if(value===true){checks[key]=true;evidence[key]='manual-local-evidence';}}}catch{}}
 const releaseIdentity=await loadReleaseIdentity();
-const record=buildCertification({runtimeProbe:probe,checks,commit:process.env.TRAVAI_COMMIT||'',version:'11.6.0'});
-record.releaseIdentity=releaseIdentity;
+const certificationMetadata=await certificationReleaseMetadata();
+const record=buildCertification({runtimeProbe:probe,checks,commit:process.env.TRAVAI_COMMIT||'',version:certificationMetadata.version});
+record.releaseIdentity=certificationMetadata.releaseIdentity;
 record.identityPolicy={secretFree:identityPolicy.secretFree,exactPackageBinding:identityPolicy.exactPackageBinding};
 record.evidenceSources=evidence;
 record.automatedHarness=true;
