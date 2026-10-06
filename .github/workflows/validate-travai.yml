@@ -54,6 +54,9 @@ jobs:
           - test:cert-history
           - test:cert-identity
           - test:cert-audit
+          - test:control-plane
+          - test:recovery-center
+          - test:release-drift
     steps:
       - name: Checkout
         uses: actions/checkout@v4
