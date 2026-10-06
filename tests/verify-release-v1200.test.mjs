@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import {buildIntegrityManifest} from '../release-integrity-v1190.mjs';
+import {buildReleaseAttestation} from '../release-attestation-v1200.mjs';
+import {verifyPortableRelease} from '../verify-release-v1200.mjs';
+
+const dir=await fs.mkdtemp(path.join(os.tmpdir(),'travai-verify-'));
+await fs.writeFile(path.join(dir,'index.html'),'index');
+await fs.writeFile(path.join(dir,'task-control-client-v972.js'),'client');
+await fs.writeFile(path.join(dir,'release.json'),JSON.stringify({service:'travai-control-surface',packageVersion:'12000000000.0.0',commit:'abc',artifact:'portable-static',runtimeAuthority:'http://127.0.0.1:4783'}));
+const integrity=await buildIntegrityManifest(dir);
+await fs.writeFile(path.join(dir,'integrity.json'),JSON.stringify(integrity));
+const attestation=await buildReleaseAttestation(dir);
+await fs.writeFile(path.join(dir,'attestation.json'),JSON.stringify(attestation));
+assert.equal((await verifyPortableRelease(dir)).ok,true);
+await fs.writeFile(path.join(dir,'index.html'),'changed');
+assert.equal((await verifyPortableRelease(dir)).ok,false);
+console.log('v12.0.0 portable release verification: PASS');
