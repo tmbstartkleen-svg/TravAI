@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  statuses: write
 
 jobs:
   test:
@@ -21,4 +22,15 @@ jobs:
         with:
           node-version: '20'
       - name: Run full regression suite
+        id: tests
         run: npm test
+      - name: Publish regression status
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OUTCOME: ${{ steps.tests.outcome }}
+          SHA: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ "$OUTCOME" = "success" ]; then STATE=success; DESC="Full TravAI regression suite passed"; else STATE=failure; DESC="Full TravAI regression suite failed"; fi
+          curl -sS -X POST             -H "Authorization: Bearer $GH_TOKEN"             -H "Accept: application/vnd.github+json"             "https://api.github.com/repos/$REPO/statuses/$SHA"             -d "{\"state\":\"$STATE\",\"context\":\"TravAI Regression Suite\",\"description\":\"$DESC\"}"
