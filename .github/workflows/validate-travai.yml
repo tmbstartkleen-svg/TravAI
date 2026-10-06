@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: read
-  statuses: write
 
 jobs:
   test:
@@ -58,18 +57,5 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Run component test and publish status
-        env:
-          GH_TOKEN: ${{ github.token }}
-          SHA: ${{ github.sha }}
-          REPO: ${{ github.repository }}
-          SCRIPT: ${{ matrix.script }}
-        run: |
-          set +e
-          OUTPUT="$(npm run "$SCRIPT" 2>&1)"
-          CODE=$?
-          printf '%s\n' "$OUTPUT"
-          DESC="$(printf '%s' "$OUTPUT" | tail -n 4 | tr '\n' ' ' | tr -s ' ' | cut -c1-120)"
-          if [ "$CODE" -eq 0 ]; then STATE=success; else STATE=failure; fi
-          curl -sS -X POST             -H "Authorization: Bearer $GH_TOKEN"             -H "Accept: application/vnd.github+json"             "https://api.github.com/repos/$REPO/statuses/$SHA"             -d "{\"state\":\"$STATE\",\"context\":\"TravAI/$SCRIPT\",\"description\":\"$DESC\"}"
-          exit "$CODE"
+      - name: Run component test
+        run: npm run "${{ matrix.script }}"
