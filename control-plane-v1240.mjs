@@ -1,0 +1,36 @@
+import {runtimeStatus} from './local-bridge/runtime-lifecycle-v1150.mjs';
+import {loadReleaseIdentity} from './local-bridge/runtime-identity-v1160.mjs';
+import {localReadiness} from './local-readiness-v1210.mjs';
+import {certificationAudit} from './certification-audit-v1230.mjs';
+
+export function recoveryPlan({runtime,readiness,certificateAudit}){
+  const actions=[];
+  if(!runtime?.running) actions.push({id:'start-runtime',command:'npm run runtime:ensure',automatic:false});
+  if(runtime?.running&&!readiness?.ok) actions.push({id:'refresh-certification',command:'npm run certify:local',automatic:false});
+  if(certificateAudit&&!certificateAudit.ok) actions.push({id:'audit-certification',command:'npm run certifications:audit',automatic:false});
+  if(!actions.length) actions.push({id:'none',command:null,automatic:false});
+  return actions;
+}
+
+export async function controlPlaneSnapshot(){
+  const [runtime,identity,readiness,certificateAudit]=await Promise.all([
+    runtimeStatus(),loadReleaseIdentity(),localReadiness(),certificationAudit()
+  ]);
+  const recovery=recoveryPlan({runtime,readiness,certificateAudit});
+  return {
+    schema:'travai-control-plane/v1',
+    generatedAt:new Date().toISOString(),
+    healthy:Boolean(runtime.running&&readiness.ok&&certificateAudit.ok),
+    runtime:{running:runtime.running,status:runtime.status??null,latencyMs:runtime.latencyMs??null,base:runtime.base},
+    release:identity,
+    certification:{ok:certificateAudit.ok,recommendation:certificateAudit.recommendation,latest:certificateAudit.latest},
+    recovery,
+    authority:{readOnly:true,executesActions:false,automaticProcessKill:false,securityBoundaryBypass:false}
+  };
+}
+
+if(import.meta.url===new URL('file:'+process.argv[1]).href){
+  const snapshot=await controlPlaneSnapshot();
+  console.log(JSON.stringify(snapshot,null,2));
+  process.exit(snapshot.healthy?0:2);
+}
