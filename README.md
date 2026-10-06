@@ -1,8 +1,8 @@
-# TravAI Elite v12.2.0
+# TravAI Elite v12.3.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v12.2.0 — Runtime Operations & Certification UX
+## v12.3.0 — Release Authority & Local Operations Hardening
 TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
@@ -346,3 +346,11 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Added `npm run ops` for one-command runtime, readiness, diagnostics, and recent-certification status.
 - Hosting-independence regression logic now checks for provider-specific deployment commands rather than rejecting the legacy source filename.
 - Added dedicated runtime-ensure and certificate-history regression coverage.
+
+
+## v12.3.0 release authority and operations hardening
+- Certification display versions are now derived from the current package-bound release identity; the stale hard-coded 11.6.0 certificate label is removed.
+- Added `npm run certifications:audit` to require an exact match across production validation, release, package version, and local protocol.
+- Certification history now retains the protocol and internal record needed for local audit while the normal operations output keeps raw records hidden.
+- `npm run ops` now includes an exact certificate-authority result and a direct recommendation.
+- Added CI regressions that reject stale release labels, mismatched package bindings, and mismatched protocols.
