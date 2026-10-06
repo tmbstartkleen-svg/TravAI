@@ -1,8 +1,8 @@
 {
   "name": "travai-vercel-control-surface",
-  "version": "12100000000.0.0",
+  "version": "12200000000.0.0",
   "private": true,
-  "description": "TravAI Elite v12.1.0 local readiness, freshness and self-diagnostics",
+  "description": "TravAI Elite v12.2.0 runtime operations and certification UX",
   "engines": {
     "node": ">=20"
   },
@@ -28,7 +28,7 @@
     "test:dashboard-recovery": "node tests/dashboard-recovery-v1070.test.mjs",
     "test:approval-restore": "node tests/approval-restore-v1080.test.mjs",
     "test:release-consistency": "node tests/release-consistency-v1090.test.mjs",
-    "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api && npm run test:runtime && npm run test:recovery && npm run test:persistence && npm run test:scheduler && npm run test:triggers && npm run test:diagnostics && npm run test:policy && npm run test:release && npm run test:templates && npm run test:favorites && npm run test:reliability-controls && npm run test:queue-summary && npm run test:restored-state && npm run test:runtime-approval && npm run test:dashboard-recovery && npm run test:approval-restore && npm run test:release-consistency && npm run test:production-certifier && npm run test:local-runtime && npm run test:runtime-lifecycle && npm run test:runtime-identity && npm run test:hosting && npm run test:portable-release && npm run test:release-integrity && npm run test:release-attestation && npm run test:verify-release && npm run test:release-health && npm run test:readiness && npm run test:self-diagnostics",
+    "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api && npm run test:runtime && npm run test:recovery && npm run test:persistence && npm run test:scheduler && npm run test:triggers && npm run test:diagnostics && npm run test:policy && npm run test:release && npm run test:templates && npm run test:favorites && npm run test:reliability-controls && npm run test:queue-summary && npm run test:restored-state && npm run test:runtime-approval && npm run test:dashboard-recovery && npm run test:approval-restore && npm run test:release-consistency && npm run test:production-certifier && npm run test:local-runtime && npm run test:runtime-lifecycle && npm run test:runtime-identity && npm run test:hosting && npm run test:portable-release && npm run test:release-integrity && npm run test:release-attestation && npm run test:verify-release && npm run test:release-health && npm run test:readiness && npm run test:self-diagnostics && npm run test:runtime-ensure && npm run test:cert-history",
     "test:production-certifier": "node tests/production-certifier-v1100.test.mjs",
     "certify:local": "node certify-local-v1140.mjs",
     "runtime": "node local-runtime-v1120.mjs",
@@ -47,6 +47,11 @@
     "ready": "node local-readiness-v1210.mjs",
     "diagnose": "node self-diagnostics-v1210.mjs",
     "test:readiness": "node tests/local-readiness-v1210.test.mjs",
-    "test:self-diagnostics": "node tests/self-diagnostics-v1210.test.mjs"
+    "test:self-diagnostics": "node tests/self-diagnostics-v1210.test.mjs",
+    "runtime:ensure": "node runtime-ensure-v1220.mjs",
+    "certifications": "node certification-history-v1220.mjs",
+    "ops": "node ops-summary-v1220.mjs",
+    "test:runtime-ensure": "node tests/runtime-ensure-v1220.test.mjs",
+    "test:cert-history": "node tests/certification-history-v1220.test.mjs"
   }
 }
