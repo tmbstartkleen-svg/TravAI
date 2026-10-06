@@ -46,6 +46,9 @@ jobs:
           - test:hosting
           - test:portable-release
           - test:release-integrity
+          - test:release-attestation
+          - test:verify-release
+          - test:release-health
     steps:
       - name: Checkout
         uses: actions/checkout@v4
