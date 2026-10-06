@@ -106,7 +106,7 @@ function dependenciesComplete(item){
 export function tickScheduler(time=now()){
   const created=[];
   for(const item of schedules.values()){
-    if(item.status==='cancelled' || item.paused) continue;
+    if(item.status==='cancelled' || item.status==='completed' || item.paused) continue;
     if(time<item.nextRunAt) continue;
 
     if(!dependenciesComplete(item)){
