@@ -1,8 +1,8 @@
-# TravAI Elite v11.5.0
+# TravAI Elite v11.6.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v11.5.0 — Runtime Lifecycle & Self-Diagnostics
+## v11.6.0 — Runtime Identity & Certification Binding
 TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
@@ -284,3 +284,11 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Lifecycle diagnostics never kill a PID automatically and never treat an occupied port as permission to terminate another process.
 - Runtime status remains restricted to the local `127.0.0.1:4783` authority boundary.
 - Lifecycle regression coverage is included in the production-certifier test command.
+
+
+## v11.6.0 runtime identity and certification binding
+- Added a secret-free release identity contract containing service, package version, release, and local protocol identifiers.
+- New certification records bind to the exact repository release identity instead of relying on health reachability alone.
+- Identity regression tests reject mismatched package versions.
+- Identity metadata contains no session token, approval authority, or secret material.
+- An already-running older runtime is not treated as upgraded until it is restarted from the newer checkout.
