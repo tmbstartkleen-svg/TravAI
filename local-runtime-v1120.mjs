@@ -2,6 +2,7 @@ import http from 'node:http';
 import {restorePersistentState,savePersistentState} from './local-bridge/persistent-state-v976.mjs';
 import {startSchedulerLoop} from './local-bridge/scheduler-loop-v977.mjs';
 import {createMountedTaskHandler} from './local-bridge/runtime-mount-v974.mjs';
+import {classifyListenError} from './local-bridge/runtime-lifecycle-v1150.mjs';
 
 const HOST='127.0.0.1';
 const PORT=4783;
@@ -30,6 +31,7 @@ const server=http.createServer(async(req,res)=>{
 });
 const scheduler=startSchedulerLoop();
 
+server.on('error',error=>{const info=classifyListenError(error);console.error(JSON.stringify(info,null,2));process.exitCode=1;});
 server.listen(PORT,HOST,()=>console.log('TravAI local runtime listening on http://127.0.0.1:4783'));
 
 async function shutdown(){
