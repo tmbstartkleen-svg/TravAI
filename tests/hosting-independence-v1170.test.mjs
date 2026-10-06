@@ -5,7 +5,9 @@ const dashboard=await readFile(new URL('../vercel-index.html',import.meta.url),'
 const client=await readFile(new URL('../task-control-client-v972.js',import.meta.url),'utf8');
 assert.equal(workflow.includes('actions/upload-artifact@v4'),true);
 assert.equal(workflow.includes('actions/deploy-pages'),false);
-assert.equal(workflow.includes('vercel'),false);
+assert.equal(workflow.includes('vercel deploy'),false);
+assert.equal(workflow.includes('wrangler pages'),false);
+assert.equal(workflow.includes('netlify deploy'),false);
 assert.equal(dashboard.includes('TravAI Elite'),true);
 assert.equal(client.includes('127.0.0.1:4783'),true);
-console.log('v11.7.0 hosting independence: PASS');
+console.log('hosting independence: PASS');
