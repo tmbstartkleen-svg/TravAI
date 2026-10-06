@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import {buildIntegrityManifest,verifyIntegrity,integrityPolicy} from '../release-integrity-v1190.mjs';
+const dir=await fs.mkdtemp(path.join(os.tmpdir(),'travai-integrity-'));
+await fs.writeFile(path.join(dir,'index.html'),'safe');
+await fs.writeFile(path.join(dir,'task-control-client-v972.js'),'client');
+const manifest=await buildIntegrityManifest(dir);
+assert.equal(await verifyIntegrity(dir,manifest),true);
+await fs.writeFile(path.join(dir,'index.html'),'tampered');
+assert.equal(await verifyIntegrity(dir,manifest),false);
+assert.equal(integrityPolicy.algorithm,'sha256');
+assert.equal(integrityPolicy.secretFree,true);
+console.log('v11.9.0 portable artifact integrity: PASS');
