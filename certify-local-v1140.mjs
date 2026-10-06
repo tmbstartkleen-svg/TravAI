@@ -6,6 +6,7 @@ import {runtimeMountPolicy} from './local-bridge/runtime-mount-v974.mjs';
 import {schedulerPolicy} from './local-bridge/task-scheduler-v977.mjs';
 import {approvalPolicy} from './local-bridge/approval-queue-v972.mjs';
 import {persistencePolicy} from './local-bridge/persistent-state-v976.mjs';
+import {loadReleaseIdentity,identityPolicy} from './local-bridge/runtime-identity-v1160.mjs';
 
 const run=promisify(execFile);
 const checks={};
@@ -29,9 +30,13 @@ checks['readonly-task']=probe.ok&&runtimeMountPolicy.sessionScope==='command:req
 
 const manual=process.env.TRAVAI_CERT_EVIDENCE||'';
 if(manual){try{const supplied=JSON.parse(await fs.readFile(manual,'utf8'));for(const [key,value] of Object.entries(supplied)){if(value===true){checks[key]=true;evidence[key]='manual-local-evidence';}}}catch{}}
-const record=buildCertification({runtimeProbe:probe,checks,commit:process.env.TRAVAI_COMMIT||'',version:'11.4.0'});
+const releaseIdentity=await loadReleaseIdentity();
+const record=buildCertification({runtimeProbe:probe,checks,commit:process.env.TRAVAI_COMMIT||'',version:'11.6.0'});
+record.releaseIdentity=releaseIdentity;
+record.identityPolicy={secretFree:identityPolicy.secretFree,exactPackageBinding:identityPolicy.exactPackageBinding};
 record.evidenceSources=evidence;
 record.automatedHarness=true;
+record.certificationBinding='repository-release-identity';
 const file=await writeCertification(record);
 console.log(JSON.stringify({ok:record.productionValidated,runtimeReachable:probe.ok,certificationFile:file,checks:record.checks,evidenceSources:evidence},null,2));
 process.exit(record.productionValidated?0:2);
