@@ -39,6 +39,7 @@ jobs:
           - test:dashboard-recovery
           - test:approval-restore
           - test:release-consistency
+          - test:production-certifier
     steps:
       - name: Checkout
         uses: actions/checkout@v4
