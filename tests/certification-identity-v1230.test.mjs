@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {loadReleaseIdentity} from '../local-bridge/runtime-identity-v1160.mjs';
+import {certificationReleaseMetadata,certificateMatchesRelease,certificationIdentityPolicy} from '../local-bridge/certification-identity-v1230.mjs';
+const identity=await loadReleaseIdentity();
+const meta=await certificationReleaseMetadata();
+assert.equal(meta.version,identity.release);
+assert.equal(meta.releaseIdentity.packageVersion,identity.packageVersion);
+assert.equal(certificateMatchesRelease({productionValidated:true,version:identity.release,releaseIdentity:identity},identity),true);
+assert.equal(certificateMatchesRelease({productionValidated:true,version:'11.6.0',releaseIdentity:identity},identity),false);
+assert.equal(certificationIdentityPolicy.hardcodedReleaseVersion,false);
+console.log('v12.3.0 certification identity authority: PASS');
