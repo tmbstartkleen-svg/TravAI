@@ -6,11 +6,18 @@ export async function certificationAudit(){
   const identity=await loadReleaseIdentity();
   const history=await certificationHistory({limit:20});
   const current=history[0]||null;
+  const exact=Boolean(current?.raw&&certificateMatchesRelease(current.raw,identity));
   return {
-    ok:Boolean(current&&certificateMatchesRelease(current.raw||current,identity)),
+    ok:exact,
     identity,
-    latest:current,
+    latest:current?{file:current.file,generatedAt:current.generatedAt,version:current.version,packageVersion:current.packageVersion,productionValidated:current.productionValidated}:null,
     historyCount:history.length,
-    recommendation:!current?'certify-local':current.packageVersion!==identity.packageVersion?'recertify-local':current.version!==identity.release?'recertify-local':'current'
+    recommendation:!current?'certify-local':!exact?'recertify-local':'current'
   };
+}
+
+if(import.meta.url===new URL('file:'+process.argv[1]).href){
+  const result=await certificationAudit();
+  console.log(JSON.stringify(result,null,2));
+  process.exit(result.ok?0:2);
 }
