@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {runtimeStatus,classifyListenError,lifecyclePolicy} from '../local-bridge/runtime-lifecycle-v1150.mjs';
+const ok=await runtimeStatus(async()=>({ok:true,status:200,json:async()=>({service:'travai-local-runtime'})}));
+assert.equal(ok.running,true);
+assert.equal(ok.service,'travai-local-runtime');
+const down=await runtimeStatus(async()=>{throw new Error('offline')});
+assert.equal(down.running,false);
+const busy=classifyListenError(Object.assign(new Error('busy'),{code:'EADDRINUSE'}));
+assert.equal(busy.code,'RUNTIME_ALREADY_RUNNING_OR_PORT_BUSY');
+assert.equal(busy.safeToKill,false);
+assert.equal(lifecyclePolicy.automaticProcessKill,false);
+assert.equal(lifecyclePolicy.arbitraryPidKill,false);
+assert.equal(lifecyclePolicy.statusReadOnly,true);
+console.log('v11.5.0 runtime lifecycle diagnostics: PASS');
