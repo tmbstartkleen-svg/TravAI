@@ -4,6 +4,7 @@ import {releasePreflight} from '../release-preflight-v1311.mjs';
 assert.equal(decodeTravAIVersion('13900000000.0.0'),'13.9.0');
 assert.equal(decodeTravAIVersion('131000000000.0.0'),'13.10.0');
 assert.equal(decodeTravAIVersion('131100000000.0.0'),'13.11.0');
+assert.equal(decodeTravAIVersion('131200000000.0.0'),'13.12.0');
 const r=await releasePreflight();
 assert.equal(r.ok,true);
 assert.equal(Object.values(r.checks).every(Boolean),true);
