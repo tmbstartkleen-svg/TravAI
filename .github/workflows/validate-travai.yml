@@ -70,6 +70,8 @@ jobs:
           - test:live-identity-enforcement
           - test:live-certification-binding
           - test:trust-state
+          - test:trust-ledger
+          - test:runtime-continuity
     steps:
       - name: Checkout
         uses: actions/checkout@v4
