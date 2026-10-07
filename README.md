@@ -1,8 +1,8 @@
-# TravAI Elite v13.7.0
+# TravAI Elite v13.8.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v13.7.0 — Trust-Chain Operations & Restart Awareness
+## v13.8.0 — Trust Evidence Ledger & Runtime Continuity
 TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
@@ -423,3 +423,10 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Doctor and control plane now distinguish a valid newly restarted process from an old/stale runtime.
 - Recovery is deduplicated: a valid restart that only invalidated the process-bound certificate recommends one `npm run certify:local` action.
 - Recovery remains advisory and never restarts or certifies automatically.
+
+
+## v13.8.0 trust evidence ledger and runtime continuity
+- Added `npm run trust:ledger` for a secret-free history of production certifications, live-process bindings, process start markers, and per-entry SHA-256 digests.
+- Added `npm run runtime:continuity` to summarize release transitions and process restarts across recent certifications.
+- Doctor now includes continuity metadata so runtime trust history is visible alongside current trust state.
+- The ledger never stores session tokens, claim secrets, or approval IDs.
