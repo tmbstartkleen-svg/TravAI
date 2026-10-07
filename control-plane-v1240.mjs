@@ -2,26 +2,28 @@ import {runtimeStatus} from './local-bridge/runtime-lifecycle-v1150.mjs';
 import {loadReleaseIdentity} from './local-bridge/runtime-identity-v1160.mjs';
 import {localReadiness} from './local-readiness-v1210.mjs';
 import {certificationAudit} from './certification-audit-v1230.mjs';
+import {liveRuntimeIdentity} from './live-runtime-identity-v1350.mjs';
 
-export function recoveryPlan({runtime,readiness,certificateAudit}){
+export function recoveryPlan({runtime,readiness,certificateAudit,liveIdentity}){
   const actions=[];
   if(!runtime?.running) actions.push({id:'start-runtime',command:'npm run runtime:ensure',automatic:false});
   if(runtime?.running&&!readiness?.ok) actions.push({id:'refresh-certification',command:'npm run certify:local',automatic:false});
   if(certificateAudit&&!certificateAudit.ok) actions.push({id:'audit-certification',command:'npm run certifications:audit',automatic:false});
+  if(runtime?.running&&liveIdentity&&!liveIdentity.ok) actions.push({id:'stale-runtime',command:'Stop the existing runtime with Ctrl+C, then run npm run runtime',automatic:false});
   if(!actions.length) actions.push({id:'none',command:null,automatic:false});
   return actions;
 }
 
 export async function controlPlaneSnapshot(){
-  const [runtime,identity,readiness,certificateAudit]=await Promise.all([
-    runtimeStatus(),loadReleaseIdentity(),localReadiness(),certificationAudit()
+  const [runtime,identity,readiness,certificateAudit,liveIdentity]=await Promise.all([
+    runtimeStatus(),loadReleaseIdentity(),localReadiness(),certificationAudit(),liveRuntimeIdentity()
   ]);
-  const recovery=recoveryPlan({runtime,readiness,certificateAudit});
+  const recovery=recoveryPlan({runtime,readiness,certificateAudit,liveIdentity});
   return {
     schema:'travai-control-plane/v1',
     generatedAt:new Date().toISOString(),
-    healthy:Boolean(runtime.running&&readiness.ok&&certificateAudit.ok),
-    runtime:{running:runtime.running,status:runtime.status??null,latencyMs:runtime.latencyMs??null,base:runtime.base},
+    healthy:Boolean(runtime.running&&readiness.ok&&certificateAudit.ok&&liveIdentity.ok),
+    runtime:{running:runtime.running,status:runtime.status??null,latencyMs:runtime.latencyMs??null,base:runtime.base,identity:liveIdentity.live,expectedIdentity:liveIdentity.expected,processStartedAt:liveIdentity.processStartedAt,stale:liveIdentity.stale,legacyIdentity:liveIdentity.legacy},
     release:identity,
     certification:{ok:certificateAudit.ok,recommendation:certificateAudit.recommendation,latest:certificateAudit.latest},
     recovery,
