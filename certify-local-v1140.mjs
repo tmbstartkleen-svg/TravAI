@@ -9,6 +9,7 @@ import {persistencePolicy} from './local-bridge/persistent-state-v976.mjs';
 import {loadReleaseIdentity,identityPolicy} from './local-bridge/runtime-identity-v1160.mjs';
 import {certificationReleaseMetadata} from './local-bridge/certification-identity-v1230.mjs';
 import {liveRuntimeIdentity} from './live-runtime-identity-v1350.mjs';
+import {bindLiveRuntime} from './local-bridge/live-certification-binding-v1360.mjs';
 
 const run=promisify(execFile);
 const checks={};
