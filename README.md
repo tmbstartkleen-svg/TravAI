@@ -1,8 +1,8 @@
-# TravAI Elite v13.2.0
+# TravAI Elite v13.3.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v13.2.0 — Pairing Dashboard & Session Control Center
+## v13.3.0 — Session Resilience & Pairing Diagnostics
 TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
@@ -387,3 +387,11 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Session tokens remain in browser sessionStorage and disappear with the browser session.
 - The dashboard has no pairing approval or denial action; local terminal approval remains mandatory.
 - Added a regression gate proving the browser control surface does not contain a pairing approval route.
+
+
+## v13.3.0 session resilience and pairing diagnostics
+- Added secret-free pairing diagnostics with pending/approved/denied counts and pending request TTLs.
+- Added `npm run pair:diagnostics` for local inspection without exposing session tokens or claim secrets.
+- Dashboard sessions now show a live remaining-time countdown and clear expired/revoked credentials from sessionStorage.
+- Dashboard pairing diagnostics explicitly show that local approval is required.
+- Added dedicated CI gates for diagnostics privacy and session-resilience UX.
