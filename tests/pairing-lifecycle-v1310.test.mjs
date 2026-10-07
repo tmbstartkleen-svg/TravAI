@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {createPairingRequest,approvePairingRequest} from '../local-bridge/pairing-authority-v956.mjs';
+import {registerApprovedClaim,claimApprovedSession,pairingLifecyclePolicy} from '../local-bridge/pairing-lifecycle-v1310.mjs';
+const id='b'.repeat(32);
+createPairingRequest({requestId:id});
+const approved=approvePairingRequest(id,['command:request']);
+const claim=registerApprovedClaim(id,approved.sessionToken,approved.expiresAt);
+const session=claimApprovedSession(id,claim.claimSecret);
+assert.equal(session.sessionToken,approved.sessionToken);
+assert.throws(()=>claimApprovedSession(id,claim.claimSecret),/CLAIM_INVALID/);
+assert.equal(pairingLifecyclePolicy.oneTimeClaim,true);
+assert.equal(pairingLifecyclePolicy.browserSelfApproval,false);
+console.log('v13.1.0 pairing lifecycle: PASS');
