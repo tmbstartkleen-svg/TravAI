@@ -57,6 +57,8 @@ jobs:
           - test:control-plane
           - test:recovery-center
           - test:release-drift
+          - test:pairing-gateway
+          - test:pair-local
     steps:
       - name: Checkout
         uses: actions/checkout@v4
