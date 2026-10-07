@@ -14,13 +14,13 @@ export async function handlePairingGateway(req){
   if(path==='/api/v1300/pairing/request'&&method==='POST'){
     try{
       const data=await bodyOf(req);
-      const request=createPairingRequest({requestId:data.requestId,label:data.label||'TravAI browser'});
+      const request=await durableCreateRequest({requestId:data.requestId,label:data.label||'TravAI browser'});
       return reply(201,{ok:true,request});
     }catch(error){return reply(400,{ok:false,error:error?.message||'PAIRING_REQUEST_FAILED'});}
   }
   const status=path.match(/^\/api\/v1300\/pairing\/([a-f0-9]{32})$/i);
   if(status&&method==='GET'){
-    const request=listPairingRequests().find(x=>x.id===status[1].toLowerCase());
+    const request=(await durableListRequests()).find(x=>x.id===status[1].toLowerCase());
     if(!request)return reply(404,{ok:false,error:'PAIR_REQUEST_NOT_FOUND'});
     return reply(200,{ok:true,request});
   }
