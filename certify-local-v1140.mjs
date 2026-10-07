@@ -42,7 +42,7 @@ record.releaseIdentity=certificationMetadata.releaseIdentity;
 record.identityPolicy={secretFree:identityPolicy.secretFree,exactPackageBinding:identityPolicy.exactPackageBinding};
 record.evidenceSources=evidence;
 record.automatedHarness=true;
-record.certificationBinding='repository-release-identity';
+bindLiveRuntime(record,liveIdentity);
 const file=await writeCertification(record);
 console.log(JSON.stringify({ok:record.productionValidated,runtimeReachable:probe.ok,liveRuntimeIdentity:liveIdentity,certificationFile:file,checks:record.checks,evidenceSources:evidence},null,2));
 process.exit(record.productionValidated?0:2);
