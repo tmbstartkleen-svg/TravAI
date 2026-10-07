@@ -1,4 +1,4 @@
-import {runtimeStatus} from './runtime-status-v1150.mjs';
+import {runtimeStatus} from './local-bridge/runtime-lifecycle-v1150.mjs';
 import {localReadiness} from './local-readiness-v1210.mjs';
 import {certificationAudit} from './certification-audit-v1230.mjs';
 import {pairingDiagnostics} from './local-bridge/pairing-diagnostics-v1330.mjs';
