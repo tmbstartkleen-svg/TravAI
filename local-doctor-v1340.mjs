@@ -12,7 +12,7 @@ export async function localDoctor(){
   const [runtime,readiness,certification,drift,liveIdentity]=await Promise.all([
     runtimeStatus(),localReadiness(),certificationAudit(),releaseDrift(),liveRuntimeIdentity()
   ]);
-  const pairing=pairingDiagnostics();
+  const pairing=await pairingDiagnostics();
   const ledger=await trustLedger({limit:10});
   const continuity=summarizeContinuity(ledger.entries);
   const checks={
