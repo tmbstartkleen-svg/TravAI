@@ -28,7 +28,8 @@ export async function handlePairingGateway(req){
   if(claim&&method==='POST'){
     try{
       const data=await bodyOf(req);
-      const session=claimApprovedSession(claim[1],data.claimSecret);
+      await durableConsumeApproval(claim[1],data.claimSecret);
+      const session=createApprovedSession(['health:read','readiness:read','command:request']);
       return reply(200,{ok:true,...session});
     }catch(error){return reply(409,{ok:false,error:error?.message||'CLAIM_FAILED'});}
   }
