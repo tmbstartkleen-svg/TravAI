@@ -50,6 +50,42 @@
     return pending.map(a=>'<div class="approval"><div><strong>'+esc(a.action)+'</strong><div class="muted">Task '+esc(a.taskId)+' · Step '+esc(a.stepId)+'</div></div><div class="actions"><button class="approve" data-id="'+esc(a.id)+'">Approve</button><button class="secondary deny" data-id="'+esc(a.id)+'">Deny</button></div></div>').join('');
   }
 
+  function randomPairId(){const bytes=new Uint8Array(16);crypto.getRandomValues(bytes);return [...bytes].map(x=>x.toString(16).padStart(2,'0')).join('');}
+  async function requestPairing(){
+    try{
+      const requestId=randomPairId();
+      const body=await api('/api/v1300/pairing/request',{method:'POST',body:JSON.stringify({requestId,label:'TravAI Control Surface'})});
+      sessionStorage.setItem('travai_pair_request',requestId);
+      const el=qs('pairingStatus'); if(el) el.textContent='WAITING FOR LOCAL APPROVAL · '+requestId;
+      return body;
+    }catch(error){const el=qs('pairingStatus');if(el)el.textContent='PAIRING REQUEST FAILED · '+error.message;}
+  }
+  async function claimPairing(){
+    const requestId=sessionStorage.getItem('travai_pair_request')||'';
+    const secret=(qs('pairingClaimSecret')?.value||'').trim();
+    if(!requestId||!secret){alert('Request pairing first, then enter the one-time claim secret from the local approval terminal.');return;}
+    try{
+      const body=await api('/api/v1300/pairing/'+encodeURIComponent(requestId)+'/claim',{method:'POST',body:JSON.stringify({claimSecret:secret})});
+      sessionStorage.setItem('travai_session',body.sessionToken);
+      sessionStorage.removeItem('travai_pair_request');
+      if(qs('pairingClaimSecret'))qs('pairingClaimSecret').value='';
+      await refreshSessionState(); await refresh();
+    }catch(error){alert('Pairing claim failed: '+error.message);}
+  }
+  async function revokeOwnSession(){
+    try{await api('/api/v1300/session/revoke',{method:'POST',body:'{}'});}catch{}
+    sessionStorage.removeItem('travai_session'); await refreshSessionState(); await refresh();
+  }
+  async function refreshSessionState(){
+    const el=qs('pairingStatus'); if(!el)return;
+    const token=sessionStorage.getItem('travai_session')||'';
+    if(!token){el.textContent=sessionStorage.getItem('travai_pair_request')?'WAITING FOR LOCAL APPROVAL':'NOT PAIRED';return;}
+    try{
+      const state=await api('/api/v1300/session/check');
+      el.textContent='PAIRED · SESSION EXPIRES '+new Date(state.expiresAt).toLocaleTimeString();
+    }catch{sessionStorage.removeItem('travai_session');el.textContent='SESSION EXPIRED OR REVOKED';}
+  }
+
   async function refresh(){
     const status=qs('taskApiStatus'), tasksEl=qs('taskList'), approvalsEl=qs('approvalList'), schedulesEl=qs('scheduleList'), diagEl=qs('diagnosticList'), templatesEl=qs('templateList'), queueEl=qs('queueSummary');
     if(!status||!tasksEl||!approvalsEl) return;
@@ -147,5 +183,9 @@
     const taskSort=qs('taskSort'); if(taskSort) taskSort.onchange=refresh;
     const taskSearch=qs('taskSearch'); if(taskSearch) taskSearch.oninput=refresh;
     const reset=qs('resetTaskFilters'); if(reset) reset.onclick=()=>{if(taskSearch)taskSearch.value='';if(taskFilter)taskFilter.value='all';if(taskSort)taskSort.value='newest';refresh();};
+    const pair=qs('requestPairing'); if(pair) pair.onclick=requestPairing;
+    const claim=qs('claimPairing'); if(claim) claim.onclick=claimPairing;
+    const revoke=qs('revokeSession'); if(revoke) revoke.onclick=revokeOwnSession;
+    refreshSessionState(); setInterval(refreshSessionState,15000);
   });
 })();
