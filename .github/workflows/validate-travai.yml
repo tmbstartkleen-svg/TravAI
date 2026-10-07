@@ -75,6 +75,7 @@ jobs:
           - test:cross-process-pairing
           - test:pairing-certification
           - test:release-preflight
+          - test:pairing-integrity
     steps:
       - name: Checkout
         uses: actions/checkout@v4
