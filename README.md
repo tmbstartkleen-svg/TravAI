@@ -1,8 +1,8 @@
-# TravAI Elite v13.10.0
+# TravAI Elite v13.11.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v13.10.0 — Pairing End-to-End Certification & Durable Diagnostics
+## v13.11.0 — Release Identity Preflight & Drift Prevention
 TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
@@ -446,3 +446,10 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Doctor and the local pairing gateway await the durable diagnostics path.
 - Added `npm run pair:certify` to verify protected file permissions, non-persistence of raw approval secrets and session authority, fresh approval after restart, local-only approval, single-use claims, and loopback runtime authority.
 - Added CI regression coverage for the pairing certification policy.
+
+
+## v13.11.0 release identity preflight
+- Added a canonical release manifest for release, package version, service identity, protocol, and milestone.
+- Added `npm run release:preflight` as a fail-closed consistency gate across the package, runtime decoder, README, dashboard, and package description.
+- Regression coverage explicitly verifies the 13.9, 13.10, and 13.11 package-version encodings.
+- CI now blocks promotion when release metadata drifts before local runtime certification.
