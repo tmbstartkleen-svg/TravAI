@@ -39,7 +39,7 @@ export async function handlePairingGateway(req){
     return reply(result.ok?200:401,{ok:result.ok});
   }
   if(path==='/api/v1300/pairing/diagnostics'&&method==='GET'){
-    return reply(200,pairingDiagnostics());
+    return reply(200,await pairingDiagnostics());
   }
   if(path==='/api/v1300/session/check'&&method==='GET'){
     const token=String(req.headers?.['x-travai-session']||'');
