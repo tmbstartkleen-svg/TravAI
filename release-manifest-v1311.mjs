@@ -1,9 +1,9 @@
 export const releaseManifest=Object.freeze({
-  release:'13.11.0',
-  packageVersion:'131100000000.0.0',
+  release:'13.12.0',
+  packageVersion:'131200000000.0.0',
   service:'travai-local-runtime',
   protocol:'travai-local/v1',
-  milestone:'Release Identity Preflight & Drift Prevention'
+  milestone:'Runtime Startup Safety & Pairing Authority Reset'
 });
 export function assertReleaseManifest(identity){
  const checks={
