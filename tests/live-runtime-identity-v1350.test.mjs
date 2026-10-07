@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {liveRuntimeIdentity,liveIdentityPolicy} from '../live-runtime-identity-v1350.mjs';
+const pkg=JSON.parse(await (await import('node:fs/promises')).readFile(new URL('../package.json',import.meta.url),'utf8'));
+const release=(await import('../local-bridge/runtime-identity-v1160.mjs')).decodeTravAIVersion(pkg.version);
+const expected={service:'travai-local-runtime',packageVersion:pkg.version,release,protocol:'travai-local/v1'};
+const good=await liveRuntimeIdentity({fetchImpl:async()=>({ok:true,json:async()=>({identity:expected,processStartedAt:'2026-10-07T00:00:00.000Z'})})});
+assert.equal(good.ok,true);assert.equal(good.stale,false);
+const stale=await liveRuntimeIdentity({fetchImpl:async()=>({ok:true,json:async()=>({identity:{...expected,packageVersion:'13400000000.0.0'}})})});
+assert.equal(stale.ok,false);assert.equal(stale.stale,true);
+const legacy=await liveRuntimeIdentity({fetchImpl:async()=>({ok:true,json:async()=>({ok:true})})});
+assert.equal(legacy.legacy,true);assert.equal(legacy.ok,false);
+assert.equal(liveIdentityPolicy.automaticRestart,false);
+console.log('v13.5.0 live runtime identity: PASS');
