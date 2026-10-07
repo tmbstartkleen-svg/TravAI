@@ -8,6 +8,7 @@ import {approvalPolicy} from './local-bridge/approval-queue-v972.mjs';
 import {persistencePolicy} from './local-bridge/persistent-state-v976.mjs';
 import {loadReleaseIdentity,identityPolicy} from './local-bridge/runtime-identity-v1160.mjs';
 import {certificationReleaseMetadata} from './local-bridge/certification-identity-v1230.mjs';
+import {liveRuntimeIdentity} from './live-runtime-identity-v1350.mjs';
 
 const run=promisify(execFile);
 const checks={};
@@ -17,7 +18,9 @@ async function policyCheck(name,testFile){
   catch{checks[name]=false;evidence[name]='failed-repository-test';}
 }
 const probe=await probeRuntime();
-checks['runtime-health']=probe.ok;evidence['runtime-health']=probe.ok?'live-runtime':'unreachable';
+const liveIdentity=await liveRuntimeIdentity();
+checks['runtime-health']=probe.ok&&liveIdentity.ok;
+evidence['runtime-health']=!probe.ok?'unreachable':liveIdentity.ok?'live-runtime-current':liveIdentity.legacy?'legacy-runtime-identity':'stale-runtime-identity';
 await policyCheck('mutating-blocked-before-approval','tests/runtime-approval-v1060.test.mjs');
 await policyCheck('restart-authority-reset','tests/approval-restore-v1080.test.mjs');
 await policyCheck('scheduled-task-pending','tests/task-scheduler-v977.test.mjs');
@@ -33,12 +36,12 @@ const manual=process.env.TRAVAI_CERT_EVIDENCE||'';
 if(manual){try{const supplied=JSON.parse(await fs.readFile(manual,'utf8'));for(const [key,value] of Object.entries(supplied)){if(value===true){checks[key]=true;evidence[key]='manual-local-evidence';}}}catch{}}
 const releaseIdentity=await loadReleaseIdentity();
 const certificationMetadata=await certificationReleaseMetadata();
-const record=buildCertification({runtimeProbe:probe,checks,commit:process.env.TRAVAI_COMMIT||'',version:certificationMetadata.version});
+const record=buildCertification({runtimeProbe:{...probe,ok:probe.ok&&liveIdentity.ok},checks,commit:process.env.TRAVAI_COMMIT||'',version:certificationMetadata.version});
 record.releaseIdentity=certificationMetadata.releaseIdentity;
 record.identityPolicy={secretFree:identityPolicy.secretFree,exactPackageBinding:identityPolicy.exactPackageBinding};
 record.evidenceSources=evidence;
 record.automatedHarness=true;
 record.certificationBinding='repository-release-identity';
 const file=await writeCertification(record);
-console.log(JSON.stringify({ok:record.productionValidated,runtimeReachable:probe.ok,certificationFile:file,checks:record.checks,evidenceSources:evidence},null,2));
+console.log(JSON.stringify({ok:record.productionValidated,runtimeReachable:probe.ok,liveRuntimeIdentity:liveIdentity,certificationFile:file,checks:record.checks,evidenceSources:evidence},null,2));
 process.exit(record.productionValidated?0:2);
