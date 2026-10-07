@@ -3,6 +3,7 @@ import {restorePersistentState,savePersistentState} from './local-bridge/persist
 import {startSchedulerLoop} from './local-bridge/scheduler-loop-v977.mjs';
 import {createMountedTaskHandler} from './local-bridge/runtime-mount-v974.mjs';
 import {classifyListenError} from './local-bridge/runtime-lifecycle-v1150.mjs';
+import {handlePairingGateway} from './local-bridge/pairing-gateway-v1300.mjs';
 
 const HOST='127.0.0.1';
 const PORT=4783;
@@ -13,6 +14,12 @@ function send(res,status,body){
 }
 
 async function baseHandler(req,res){
+  const pairing=await handlePairingGateway(req);
+  if(pairing){
+    res.writeHead(pairing.status,pairing.headers);
+    res.end(JSON.stringify(pairing.body));
+    return true;
+  }
   const path=new URL(req.url,'http://127.0.0.1').pathname;
   const method=String(req.method||'GET').toUpperCase();
   if(method==='GET' && (path==='/health'||path==='/api/health'||path==='/api/v958/bridge/health')){
