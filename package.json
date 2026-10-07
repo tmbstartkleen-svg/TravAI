@@ -1,8 +1,8 @@
 {
   "name": "travai-vercel-control-surface",
-  "version": "13700000000.0.0",
+  "version": "13800000000.0.0",
   "private": true,
-  "description": "TravAI Elite v13.7.0 trust-chain operations and restart awareness",
+  "description": "TravAI Elite v13.8.0 trust evidence ledger and runtime continuity",
   "engines": {
     "node": ">=20"
   },
@@ -28,7 +28,7 @@
     "test:dashboard-recovery": "node tests/dashboard-recovery-v1070.test.mjs",
     "test:approval-restore": "node tests/approval-restore-v1080.test.mjs",
     "test:release-consistency": "node tests/release-consistency-v1090.test.mjs",
-    "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api && npm run test:runtime && npm run test:recovery && npm run test:persistence && npm run test:scheduler && npm run test:triggers && npm run test:diagnostics && npm run test:policy && npm run test:release && npm run test:templates && npm run test:favorites && npm run test:reliability-controls && npm run test:queue-summary && npm run test:restored-state && npm run test:runtime-approval && npm run test:dashboard-recovery && npm run test:approval-restore && npm run test:release-consistency && npm run test:production-certifier && npm run test:local-runtime && npm run test:runtime-lifecycle && npm run test:runtime-identity && npm run test:hosting && npm run test:portable-release && npm run test:release-integrity && npm run test:release-attestation && npm run test:verify-release && npm run test:release-health && npm run test:readiness && npm run test:self-diagnostics && npm run test:runtime-ensure && npm run test:cert-history && npm run test:cert-identity && npm run test:cert-audit && npm run test:control-plane && npm run test:recovery-center && npm run test:release-drift && npm run test:pairing-gateway && npm run test:pair-local && npm run test:pairing-lifecycle && npm run test:pairing-dashboard && npm run test:pairing-diagnostics && npm run test:session-resilience && npm run test:local-doctor && npm run test:recovery-intelligence && npm run test:live-runtime-identity && npm run test:doctor-live-identity && npm run test:live-identity-enforcement && npm run test:live-certification-binding && npm run test:trust-state",
+    "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api && npm run test:runtime && npm run test:recovery && npm run test:persistence && npm run test:scheduler && npm run test:triggers && npm run test:diagnostics && npm run test:policy && npm run test:release && npm run test:templates && npm run test:favorites && npm run test:reliability-controls && npm run test:queue-summary && npm run test:restored-state && npm run test:runtime-approval && npm run test:dashboard-recovery && npm run test:approval-restore && npm run test:release-consistency && npm run test:production-certifier && npm run test:local-runtime && npm run test:runtime-lifecycle && npm run test:runtime-identity && npm run test:hosting && npm run test:portable-release && npm run test:release-integrity && npm run test:release-attestation && npm run test:verify-release && npm run test:release-health && npm run test:readiness && npm run test:self-diagnostics && npm run test:runtime-ensure && npm run test:cert-history && npm run test:cert-identity && npm run test:cert-audit && npm run test:control-plane && npm run test:recovery-center && npm run test:release-drift && npm run test:pairing-gateway && npm run test:pair-local && npm run test:pairing-lifecycle && npm run test:pairing-dashboard && npm run test:pairing-diagnostics && npm run test:session-resilience && npm run test:local-doctor && npm run test:recovery-intelligence && npm run test:live-runtime-identity && npm run test:doctor-live-identity && npm run test:live-identity-enforcement && npm run test:live-certification-binding && npm run test:trust-state && npm run test:trust-ledger && npm run test:runtime-continuity",
     "test:production-certifier": "node tests/production-certifier-v1100.test.mjs",
     "certify:local": "node certify-local-v1140.mjs",
     "runtime": "node local-runtime-v1120.mjs",
@@ -80,6 +80,10 @@
     "test:doctor-live-identity": "node tests/doctor-live-identity-v1350.test.mjs",
     "test:live-identity-enforcement": "node tests/live-identity-enforcement-v1350.test.mjs",
     "test:live-certification-binding": "node tests/live-certification-binding-v1360.test.mjs",
-    "test:trust-state": "node tests/trust-state-v1370.test.mjs"
+    "test:trust-state": "node tests/trust-state-v1370.test.mjs",
+    "trust:ledger": "node trust-ledger-v1380.mjs",
+    "runtime:continuity": "node runtime-continuity-v1380.mjs",
+    "test:trust-ledger": "node tests/trust-ledger-v1380.test.mjs",
+    "test:runtime-continuity": "node tests/runtime-continuity-v1380.test.mjs"
   }
 }
