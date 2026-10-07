@@ -5,12 +5,16 @@ import {pairingDiagnostics} from './local-bridge/pairing-diagnostics-v1330.mjs';
 import {releaseDrift} from './release-drift-v1240.mjs';
 import {liveRuntimeIdentity} from './live-runtime-identity-v1350.mjs';
 import {classifyTrustState} from './trust-state-v1370.mjs';
+import {trustLedger} from './trust-ledger-v1380.mjs';
+import {summarizeContinuity} from './runtime-continuity-v1380.mjs';
 
 export async function localDoctor(){
   const [runtime,readiness,certification,drift,liveIdentity]=await Promise.all([
     runtimeStatus(),localReadiness(),certificationAudit(),releaseDrift(),liveRuntimeIdentity()
   ]);
   const pairing=pairingDiagnostics();
+  const ledger=await trustLedger({limit:10});
+  const continuity=summarizeContinuity(ledger.entries);
   const checks={
     runtimeReachable:runtime.running===true&&runtime.status===200,
     readiness:readiness.ok===true,
@@ -36,6 +40,7 @@ export async function localDoctor(){
     certification:{ok:certification.ok,releaseExact:certification.releaseExact,liveExact:certification.liveExact,recommendation:certification.recommendation,latest:certification.latest||null},
     release:{release:drift.release,packageVersion:drift.packageVersion},
     pairing:{counts:pairing.counts,pending:pairing.pending},
+    continuity:{latestBoundToLiveProcess:continuity.latestBoundToLiveProcess,transitionCount:continuity.transitions.length,latestProcessStartedAt:continuity.latest?.processStartedAt||null},
     recovery,
     authority:{readOnly:true,automaticProcessKill:false,automaticRestart:false,securityBoundaryMutation:false}
   };
