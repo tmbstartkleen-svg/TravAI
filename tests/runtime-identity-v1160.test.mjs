@@ -3,6 +3,9 @@ import {loadReleaseIdentity,identityMatches,identityPolicy,decodeTravAIVersion} 
 const id=await loadReleaseIdentity();
 assert.equal(id.service,'travai-local-runtime');
 assert.equal(id.release,decodeTravAIVersion(id.packageVersion));
+assert.equal(decodeTravAIVersion('13900000000.0.0'),'13.9.0');
+assert.equal(decodeTravAIVersion('131000000000.0.0'),'13.10.0');
+assert.equal(decodeTravAIVersion('131100000000.0.0'),'13.11.0');
 assert.equal(id.protocol,'travai-local/v1');
 assert.equal(identityMatches(id,{...id}),true);
 assert.equal(identityMatches({...id,packageVersion:'old'},id),false);
