@@ -5,7 +5,7 @@ import {createMountedTaskHandler} from './local-bridge/runtime-mount-v974.mjs';
 import {classifyListenError} from './local-bridge/runtime-lifecycle-v1150.mjs';
 import {handlePairingGateway} from './local-bridge/pairing-gateway-v1300.mjs';
 import {loadReleaseIdentity} from './local-bridge/runtime-identity-v1160.mjs';
-import {resetDurableApprovals} from './local-bridge/pairing-state-v1390.mjs';
+import {resetPairingApprovalsSafe} from './local-bridge/pairing-integrity-v1313.mjs';
 import {releasePreflight} from './release-preflight-v1311.mjs';
 
 const HOST='127.0.0.1';
@@ -38,7 +38,7 @@ async function baseHandler(req,res){
 }
 
 await restorePersistentState();
-await resetDurableApprovals();
+await resetPairingApprovalsSafe();
 const handler=createMountedTaskHandler(baseHandler);
 const server=http.createServer(async(req,res)=>{
   try{await handler(req,res);}
