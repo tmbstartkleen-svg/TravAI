@@ -1,12 +1,14 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 const state=await readFile(new URL('../local-bridge/pairing-state-v1390.mjs',import.meta.url),'utf8');
+const integrity=await readFile(new URL('../local-bridge/pairing-integrity-v1313.mjs',import.meta.url),'utf8');
 const cli=await readFile(new URL('../pair-local-v1300.mjs',import.meta.url),'utf8');
 const gateway=await readFile(new URL('../local-bridge/pairing-gateway-v1300.mjs',import.meta.url),'utf8');
 assert.equal(state.includes("mode:0o700"),true);
 assert.equal(state.includes("mode:0o600"),true);
 assert.equal(state.includes("approvalHash"),true);
+assert.equal(integrity.includes("PAIR_REQUEST_DUPLICATE"),true);
 assert.equal(cli.includes("sessionCreated:false"),true);
-assert.equal(gateway.includes("durableConsumeApproval"),true);
+assert.equal(gateway.includes("consumePairingApprovalSafe"),true);
 assert.equal(gateway.includes("createApprovedSession"),true);
-console.log('v13.9 cross process pairing architecture pass');
+console.log('v13.13 cross process pairing integrity pass');
