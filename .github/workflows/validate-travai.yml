@@ -65,6 +65,8 @@ jobs:
           - test:session-resilience
           - test:local-doctor
           - test:recovery-intelligence
+          - test:live-runtime-identity
+          - test:doctor-live-identity
     steps:
       - name: Checkout
         uses: actions/checkout@v4
