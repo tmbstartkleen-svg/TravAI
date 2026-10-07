@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
 import {createPairingRequestSafe,listPairingRequestsSafe,pairingIntegrityPolicy} from '../local-bridge/pairing-integrity-v1313.mjs';
 
-const id='d'.repeat(32);
+const id=crypto.randomBytes(16).toString('hex');
 const created=await createPairingRequestSafe({requestId:id,label:'integrity test'});
 assert.equal(created.id,id);
 await assert.rejects(()=>createPairingRequestSafe({requestId:id,label:'duplicate'}),/PAIR_REQUEST_DUPLICATE/);
