@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+const runtime=await readFile(new URL('../local-runtime-v1120.mjs',import.meta.url),'utf8');
+const doctor=await readFile(new URL('../local-doctor-v1340.mjs',import.meta.url),'utf8');
+assert.equal(runtime.includes('PROCESS_IDENTITY=await loadReleaseIdentity()'),true);
+assert.equal(runtime.includes('processStartedAt:PROCESS_STARTED_AT'),true);
+assert.equal(doctor.includes('liveRuntimeIdentity'),true);
+assert.equal(doctor.includes("id:'stale-runtime'"),true);
+assert.equal(doctor.includes('automaticProcessKill:false'),true);
+assert.equal(doctor.includes('automaticRestart:false'),true);
+console.log('v13.5.0 doctor identity integration: PASS');
