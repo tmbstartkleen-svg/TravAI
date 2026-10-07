@@ -10,5 +10,5 @@ assert.equal(source.includes("spawn("),false);
 assert.equal(source.includes("shell:true"),false);
 assert.equal(source.includes('releasePreflight()'),true);
 assert.equal(source.includes("RELEASE_PREFLIGHT_FAILED"),true);
-assert.equal(source.includes('resetDurableApprovals()'),true);
-console.log('v11.2.0 local runtime host policy: PASS');
+assert.equal(source.includes('resetPairingApprovalsSafe()'),true);
+console.log('v13.13 local runtime startup policy: PASS');
