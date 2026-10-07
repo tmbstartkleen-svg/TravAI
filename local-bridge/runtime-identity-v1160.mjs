@@ -2,10 +2,17 @@ import fs from 'node:fs/promises';
 
 export function decodeTravAIVersion(packageVersion){
   const head=String(packageVersion||'').split('.')[0];
-  if(!/^\d{11}$/.test(head)) return 'unknown';
-  const major=Number(head.slice(0,2));
-  const minor=Number(head.slice(2,3));
-  return major+'.'+minor+'.0';
+  if(!/^\d+$/.test(head)||head.length<11) return 'unknown';
+  if(head.startsWith('13')){
+    const zeros=head.match(/0+$/)?.[0]?.length||0;
+    const core=head.slice(0,head.length-zeros);
+    if(core.length<3) return 'unknown';
+    const major=Number(core.slice(0,2));
+    const minor=Number(core.slice(2));
+    if(!Number.isInteger(major)||!Number.isInteger(minor)) return 'unknown';
+    return major+'.'+minor+'.0';
+  }
+  return 'unknown';
 }
 
 export async function loadReleaseIdentity(){
