@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {createPairingRequest} from '../local-bridge/pairing-authority-v956.mjs';
+import {pairingDiagnostics} from '../local-bridge/pairing-diagnostics-v1330.mjs';
+createPairingRequest({requestId:'c'.repeat(32),label:'diagnostic test'});
+const d=pairingDiagnostics();
+assert.equal(d.ok,true);
+assert.equal(d.counts.pending>=1,true);
+assert.equal(d.policy.exposesSessionTokens,false);
+assert.equal(d.policy.exposesClaimSecrets,false);
+assert.equal(d.policy.browserApproval,false);
+assert.equal(JSON.stringify(d).includes('sessionToken'),false);
+assert.equal(JSON.stringify(d).includes('claimSecret'),false);
+console.log('v13.3.0 pairing diagnostics: PASS');
