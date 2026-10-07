@@ -1,8 +1,8 @@
 {
   "name": "travai-vercel-control-surface",
-  "version": "13400000000.0.0",
+  "version": "13500000000.0.0",
   "private": true,
-  "description": "TravAI Elite v13.4.0 local runtime doctor and recovery intelligence",
+  "description": "TravAI Elite v13.5.0 live runtime identity and stale-process detection",
   "engines": {
     "node": ">=20"
   },
@@ -28,7 +28,7 @@
     "test:dashboard-recovery": "node tests/dashboard-recovery-v1070.test.mjs",
     "test:approval-restore": "node tests/approval-restore-v1080.test.mjs",
     "test:release-consistency": "node tests/release-consistency-v1090.test.mjs",
-    "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api && npm run test:runtime && npm run test:recovery && npm run test:persistence && npm run test:scheduler && npm run test:triggers && npm run test:diagnostics && npm run test:policy && npm run test:release && npm run test:templates && npm run test:favorites && npm run test:reliability-controls && npm run test:queue-summary && npm run test:restored-state && npm run test:runtime-approval && npm run test:dashboard-recovery && npm run test:approval-restore && npm run test:release-consistency && npm run test:production-certifier && npm run test:local-runtime && npm run test:runtime-lifecycle && npm run test:runtime-identity && npm run test:hosting && npm run test:portable-release && npm run test:release-integrity && npm run test:release-attestation && npm run test:verify-release && npm run test:release-health && npm run test:readiness && npm run test:self-diagnostics && npm run test:runtime-ensure && npm run test:cert-history && npm run test:cert-identity && npm run test:cert-audit && npm run test:control-plane && npm run test:recovery-center && npm run test:release-drift && npm run test:pairing-gateway && npm run test:pair-local && npm run test:pairing-lifecycle && npm run test:pairing-dashboard && npm run test:pairing-diagnostics && npm run test:session-resilience && npm run test:local-doctor && npm run test:recovery-intelligence",
+    "test": "npm run test:bridge && npm run test:agent && npm run test:mac && npm run test:task-api && npm run test:runtime && npm run test:recovery && npm run test:persistence && npm run test:scheduler && npm run test:triggers && npm run test:diagnostics && npm run test:policy && npm run test:release && npm run test:templates && npm run test:favorites && npm run test:reliability-controls && npm run test:queue-summary && npm run test:restored-state && npm run test:runtime-approval && npm run test:dashboard-recovery && npm run test:approval-restore && npm run test:release-consistency && npm run test:production-certifier && npm run test:local-runtime && npm run test:runtime-lifecycle && npm run test:runtime-identity && npm run test:hosting && npm run test:portable-release && npm run test:release-integrity && npm run test:release-attestation && npm run test:verify-release && npm run test:release-health && npm run test:readiness && npm run test:self-diagnostics && npm run test:runtime-ensure && npm run test:cert-history && npm run test:cert-identity && npm run test:cert-audit && npm run test:control-plane && npm run test:recovery-center && npm run test:release-drift && npm run test:pairing-gateway && npm run test:pair-local && npm run test:pairing-lifecycle && npm run test:pairing-dashboard && npm run test:pairing-diagnostics && npm run test:session-resilience && npm run test:local-doctor && npm run test:recovery-intelligence && npm run test:live-runtime-identity && npm run test:doctor-live-identity",
     "test:production-certifier": "node tests/production-certifier-v1100.test.mjs",
     "certify:local": "node certify-local-v1140.mjs",
     "runtime": "node local-runtime-v1120.mjs",
@@ -74,6 +74,9 @@
     "test:session-resilience": "node tests/session-resilience-v1330.test.mjs",
     "doctor": "node local-doctor-v1340.mjs",
     "test:local-doctor": "node tests/local-doctor-v1340.test.mjs",
-    "test:recovery-intelligence": "node tests/recovery-intelligence-v1340.test.mjs"
+    "test:recovery-intelligence": "node tests/recovery-intelligence-v1340.test.mjs",
+    "runtime:identity": "node live-runtime-identity-v1350.mjs",
+    "test:live-runtime-identity": "node tests/live-runtime-identity-v1350.test.mjs",
+    "test:doctor-live-identity": "node tests/doctor-live-identity-v1350.test.mjs"
   }
 }
