@@ -1,8 +1,8 @@
-# TravAI Elite v13.12.0
+# TravAI Elite v13.13.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v13.12.0 — Runtime Startup Safety & Pairing Authority Reset
+## v13.13.0 — Durable Pairing State Integrity
 TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
@@ -460,3 +460,12 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Any approved-but-unclaimed durable pairing authority is reset to pending on runtime startup.
 - Restarted runtimes therefore require fresh local approval rather than inheriting authority from the previous process.
 - Runtime policy exposes both startup guarantees for certification and regression testing.
+
+
+## v13.13.0 durable pairing state integrity
+- Added a pairing integrity layer between browser/runtime/CLI consumers and the durable pairing store.
+- Duplicate request IDs are rejected instead of overwriting existing state.
+- Per-request mutations are serialized in-process to reduce conflicting local updates.
+- Pairing state returned to consumers is validated before use.
+- Gateway, local CLI, diagnostics, and runtime startup reset now route through the integrity layer.
+- Added dedicated regression coverage for duplicate rejection and integrity policy.
