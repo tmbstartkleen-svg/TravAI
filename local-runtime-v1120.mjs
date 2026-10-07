@@ -5,10 +5,14 @@ import {createMountedTaskHandler} from './local-bridge/runtime-mount-v974.mjs';
 import {classifyListenError} from './local-bridge/runtime-lifecycle-v1150.mjs';
 import {handlePairingGateway} from './local-bridge/pairing-gateway-v1300.mjs';
 import {loadReleaseIdentity} from './local-bridge/runtime-identity-v1160.mjs';
+import {resetDurableApprovals} from './local-bridge/pairing-state-v1390.mjs';
+import {releasePreflight} from './release-preflight-v1311.mjs';
 
 const HOST='127.0.0.1';
 const PORT=4783;
 const PROCESS_STARTED_AT=new Date().toISOString();
+const PREFLIGHT=await releasePreflight();
+if(!PREFLIGHT.ok) throw new Error('RELEASE_PREFLIGHT_FAILED');
 const PROCESS_IDENTITY=await loadReleaseIdentity();
 
 function send(res,status,body){
@@ -34,6 +38,7 @@ async function baseHandler(req,res){
 }
 
 await restorePersistentState();
+await resetDurableApprovals();
 const handler=createMountedTaskHandler(baseHandler);
 const server=http.createServer(async(req,res)=>{
   try{await handler(req,res);}
@@ -58,5 +63,7 @@ export const localRuntimePolicy=Object.freeze({
   loopbackOnly:true,
   remoteBind:false,
   arbitraryShell:false,
-  securityBypass:false
+  securityBypass:false,
+  releasePreflightRequired:true,
+  pairingApprovalResetOnStartup:true
 });
