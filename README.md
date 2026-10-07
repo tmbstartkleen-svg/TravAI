@@ -1,8 +1,8 @@
-# TravAI Elite v13.5.0
+# TravAI Elite v13.6.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v13.5.0 — Live Runtime Identity & Stale-Process Detection
+## v13.6.0 — Runtime Trust Chain & Certification Binding
 TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
@@ -409,3 +409,10 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Added `npm run runtime:identity` to compare the live process against the current checkout.
 - The doctor now fails closed when the process is legacy or stale and recommends a manual Ctrl+C + `npm run runtime` restart.
 - No automatic process kill or restart authority was added.
+
+
+## v13.6.0 runtime trust chain
+- Certification records are now bound to the exact live runtime identity and process start marker.
+- Certification audit requires both exact repository release identity and exact live-process binding.
+- Restarting the runtime invalidates the previous live-process certificate until the new process is certified.
+- The binding remains secret-free and grants no execution or approval authority.
