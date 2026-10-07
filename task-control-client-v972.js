@@ -76,13 +76,25 @@
     try{await api('/api/v1300/session/revoke',{method:'POST',body:'{}'});}catch{}
     sessionStorage.removeItem('travai_session'); await refreshSessionState(); await refresh();
   }
+  function sessionCountdown(expiresAt){
+    const ms=Math.max(0,Number(expiresAt||0)-Date.now());
+    const min=Math.floor(ms/60000), sec=Math.floor((ms%60000)/1000);
+    return min+'m '+String(sec).padStart(2,'0')+'s';
+  }
+  async function refreshPairingDiagnostics(){
+    const el=qs('pairingDiagnostics'); if(!el)return;
+    try{
+      const d=await api('/api/v1300/pairing/diagnostics');
+      el.textContent='Pending '+(d.counts?.pending||0)+' · Approved '+(d.counts?.approved||0)+' · Local approval required';
+    }catch{el.textContent='Pairing diagnostics unavailable';}
+  }
   async function refreshSessionState(){
     const el=qs('pairingStatus'); if(!el)return;
     const token=sessionStorage.getItem('travai_session')||'';
     if(!token){el.textContent=sessionStorage.getItem('travai_pair_request')?'WAITING FOR LOCAL APPROVAL':'NOT PAIRED';return;}
     try{
       const state=await api('/api/v1300/session/check');
-      el.textContent='PAIRED · SESSION EXPIRES '+new Date(state.expiresAt).toLocaleTimeString();
+      el.textContent='PAIRED · '+sessionCountdown(state.expiresAt)+' remaining · expires '+new Date(state.expiresAt).toLocaleTimeString();
     }catch{sessionStorage.removeItem('travai_session');el.textContent='SESSION EXPIRED OR REVOKED';}
   }
 
@@ -186,6 +198,6 @@
     const pair=qs('requestPairing'); if(pair) pair.onclick=requestPairing;
     const claim=qs('claimPairing'); if(claim) claim.onclick=claimPairing;
     const revoke=qs('revokeSession'); if(revoke) revoke.onclick=revokeOwnSession;
-    refreshSessionState(); setInterval(refreshSessionState,15000);
+    refreshSessionState(); refreshPairingDiagnostics(); setInterval(refreshSessionState,5000); setInterval(refreshPairingDiagnostics,15000);
   });
 })();
