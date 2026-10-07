@@ -8,4 +8,7 @@ assert.equal(source.includes("0.0.0.0"),false);
 assert.equal(source.includes("exec("),false);
 assert.equal(source.includes("spawn("),false);
 assert.equal(source.includes("shell:true"),false);
+assert.equal(source.includes('releasePreflight()'),true);
+assert.equal(source.includes("RELEASE_PREFLIGHT_FAILED"),true);
+assert.equal(source.includes('resetDurableApprovals()'),true);
 console.log('v11.2.0 local runtime host policy: PASS');
