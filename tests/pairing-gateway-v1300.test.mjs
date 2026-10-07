@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {Readable} from 'node:stream';
+import {handlePairingGateway,pairingGatewayPolicy} from '../local-bridge/pairing-gateway-v1300.mjs';
+const id='a'.repeat(32);
+const req=Readable.from([JSON.stringify({requestId:id,label:'test browser'})]); req.url='/api/v1300/pairing/request'; req.method='POST'; req.headers={};
+const created=await handlePairingGateway(req);
+assert.equal(created.status,201);
+assert.equal(created.body.request.status,'pending');
+const approve=Readable.from([]); approve.url='/api/v1300/pairing/'+id+'/approve'; approve.method='POST'; approve.headers={};
+const blocked=await handlePairingGateway(approve);
+assert.equal(blocked.status,404);
+assert.equal(blocked.body.error,'LOCAL_APPROVAL_ONLY');
+assert.equal(pairingGatewayPolicy.browserCanApprove,false);
+assert.equal(pairingGatewayPolicy.approvalAuthority,'local-cli-only');
+console.log('v13.0.0 pairing gateway: PASS');
