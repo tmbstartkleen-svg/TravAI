@@ -42,6 +42,16 @@ export function approvePairingRequest(requestId, scopes=['health:read','readines
   return {sessionToken,scopes:granted,expiresAt:session.expiresAt};
 }
 
+export function createApprovedSession(scopes=['health:read','readiness:read','command:request']) {
+  clean();
+  const granted=normalizeScopes(scopes);
+  if (!granted.length) throw new Error('NO_ALLOWED_SCOPES');
+  const sessionToken=token();
+  const session={tokenHash:crypto.createHash('sha256').update(sessionToken).digest('hex'),scopes:granted,createdAt:now(),expiresAt:now()+SESSION_TTL_MS,revoked:false};
+  sessions.set(session.tokenHash,session);
+  return {sessionToken,scopes:granted,expiresAt:session.expiresAt};
+}
+
 export function denyPairingRequest(requestId) {
   clean();
   const r=requests.get(String(requestId||'').toLowerCase());
