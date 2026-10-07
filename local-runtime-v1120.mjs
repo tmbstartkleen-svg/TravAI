@@ -4,9 +4,12 @@ import {startSchedulerLoop} from './local-bridge/scheduler-loop-v977.mjs';
 import {createMountedTaskHandler} from './local-bridge/runtime-mount-v974.mjs';
 import {classifyListenError} from './local-bridge/runtime-lifecycle-v1150.mjs';
 import {handlePairingGateway} from './local-bridge/pairing-gateway-v1300.mjs';
+import {loadReleaseIdentity} from './local-bridge/runtime-identity-v1160.mjs';
 
 const HOST='127.0.0.1';
 const PORT=4783;
+const PROCESS_STARTED_AT=new Date().toISOString();
+const PROCESS_IDENTITY=await loadReleaseIdentity();
 
 function send(res,status,body){
   res.writeHead(status,{'content-type':'application/json','cache-control':'no-store'});
@@ -23,7 +26,7 @@ async function baseHandler(req,res){
   const path=new URL(req.url,'http://127.0.0.1').pathname;
   const method=String(req.method||'GET').toUpperCase();
   if(method==='GET' && (path==='/health'||path==='/api/health'||path==='/api/v958/bridge/health')){
-    send(res,200,{ok:true,service:'travai-local-runtime',ready:true});
+    send(res,200,{ok:true,service:'travai-local-runtime',ready:true,identity:PROCESS_IDENTITY,processStartedAt:PROCESS_STARTED_AT});
     return true;
   }
   send(res,404,{ok:false,error:'NOT_FOUND'});
