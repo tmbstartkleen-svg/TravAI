@@ -1,8 +1,8 @@
 {
   "name": "travai-vercel-control-surface",
-  "version": "131100000000.0.0",
+  "version": "131200000000.0.0",
   "private": true,
-  "description": "TravAI Elite v13.11.0 release identity preflight and drift prevention",
+  "description": "TravAI Elite v13.12.0 runtime startup safety and pairing authority reset",
   "engines": {
     "node": ">=20"
   },
