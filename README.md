@@ -1,8 +1,8 @@
-# TravAI Elite v13.4.0
+# TravAI Elite v13.5.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v13.4.0 — Local Runtime Doctor & Recovery Intelligence
+## v13.5.0 — Live Runtime Identity & Stale-Process Detection
 TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
@@ -402,3 +402,10 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Recovery intelligence converts failures into ordered commands that require explicit user action.
 - Doctor/recovery authority is read-only and advisory: no process killing, automatic restart, shell execution, or macOS security-boundary mutation.
 - Added dedicated CI gates for the doctor safety boundary and recovery intelligence.
+
+
+## v13.5.0 live runtime identity and stale-process detection
+- Runtime health now exposes a secret-free identity captured when the process starts.
+- Added `npm run runtime:identity` to compare the live process against the current checkout.
+- The doctor now fails closed when the process is legacy or stale and recommends a manual Ctrl+C + `npm run runtime` restart.
+- No automatic process kill or restart authority was added.
