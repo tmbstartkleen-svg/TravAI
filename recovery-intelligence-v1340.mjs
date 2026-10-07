@@ -5,9 +5,10 @@ export function recoveryIntelligence(doctor){
     order:index+1,id:x.id,command:x.command,requiresUserAction:true,automatic:false
   }));
   const severe=doctor?.checks?.runtimeReachable===false;
+  const restartCert=doctor?.trust?.state==='restart-recertification-required';
   return {
-    severity:severe?'runtime-offline':'attention',
-    summary:severe?'Local runtime is not reachable.':'Local runtime is reachable but one or more release checks need attention.',
+    severity:severe?'runtime-offline':restartCert?'recertification-required':'attention',
+    summary:severe?'Local runtime is not reachable.':restartCert?'The current runtime process is valid but needs a fresh live-process certificate.':'Local runtime is reachable but one or more release checks need attention.',
     steps
   };
 }
