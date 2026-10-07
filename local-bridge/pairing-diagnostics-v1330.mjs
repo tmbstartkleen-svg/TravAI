@@ -1,8 +1,8 @@
-import {durableListRequests} from './pairing-state-v1390.mjs';
+import {listPairingRequestsSafe} from './pairing-integrity-v1313.mjs';
 
 export async function pairingDiagnostics(){
   const now=Date.now();
-  const requests=await durableListRequests();
+  const requests=await listPairingRequestsSafe();
   const counts={pending:0,approved:0,denied:0,consumed:0};
   for(const r of requests){
     const status=r.status==='locally-approved'?'approved':r.status;
