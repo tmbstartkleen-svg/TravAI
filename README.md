@@ -1,8 +1,8 @@
-# TravAI Elite v12.4.0
+# TravAI Elite v13.0.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v12.4.0 — Local Control Plane & Recovery Center
+## v13.0.0 — Safe Pairing & Browser-to-Local Control Plane
 TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
@@ -362,3 +362,12 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Added `npm run release:drift` to detect package, README, dashboard, and protocol release drift.
 - Control-plane authority is read-only and explicitly reports that it executes no actions and bypasses no security boundary.
 - Added dedicated CI gates for control-plane recovery, recovery guidance, and release drift.
+
+
+## v13.0.0 safe pairing and browser-to-local control plane
+- The loopback runtime now exposes browser-safe pairing request, pairing-status, and session-check routes.
+- Browser routes cannot approve or deny pairing. Pairing authority remains local-only through `npm run pair:list`, `npm run pair:approve -- <request-id>`, and `npm run pair:deny -- <request-id>`.
+- Approved sessions are short-lived and scoped to the existing command-request boundary.
+- Pairing does not bypass the separate single-use approval required for consequential Mac actions.
+- No arbitrary shell, unrestricted filesystem access, remote bind, or macOS security-control bypass was introduced.
+- Because v13 changes the runtime handler, an already-running pre-v13 local runtime must be manually restarted after pulling this release.
