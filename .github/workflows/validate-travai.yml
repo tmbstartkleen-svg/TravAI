@@ -60,6 +60,7 @@ jobs:
           - test:pairing-gateway
           - test:pair-local
           - test:pairing-lifecycle
+          - test:pairing-dashboard
     steps:
       - name: Checkout
         uses: actions/checkout@v4
