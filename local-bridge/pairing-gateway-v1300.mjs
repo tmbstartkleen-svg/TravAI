@@ -1,5 +1,5 @@
 import {authorizeSession,revokeSession,createApprovedSession} from './pairing-authority-v956.mjs';
-import {durableCreateRequest,durableListRequests,durableConsumeApproval} from './pairing-state-v1390.mjs';
+import {createPairingRequestSafe,listPairingRequestsSafe,consumePairingApprovalSafe} from './pairing-integrity-v1313.mjs';
 import {pairingDiagnostics} from './pairing-diagnostics-v1330.mjs';
 
 function pathOf(req){try{return new URL(req.url,'http://127.0.0.1').pathname}catch{return ''}}
@@ -14,13 +14,13 @@ export async function handlePairingGateway(req){
   if(path==='/api/v1300/pairing/request'&&method==='POST'){
     try{
       const data=await bodyOf(req);
-      const request=await durableCreateRequest({requestId:data.requestId,label:data.label||'TravAI browser'});
+      const request=await createPairingRequestSafe({requestId:data.requestId,label:data.label||'TravAI browser'});
       return reply(201,{ok:true,request});
     }catch(error){return reply(400,{ok:false,error:error?.message||'PAIRING_REQUEST_FAILED'});}
   }
   const status=path.match(/^\/api\/v1300\/pairing\/([a-f0-9]{32})$/i);
   if(status&&method==='GET'){
-    const request=(await durableListRequests()).find(x=>x.id===status[1].toLowerCase());
+    const request=(await listPairingRequestsSafe()).find(x=>x.id===status[1].toLowerCase());
     if(!request)return reply(404,{ok:false,error:'PAIR_REQUEST_NOT_FOUND'});
     return reply(200,{ok:true,request});
   }
@@ -28,7 +28,7 @@ export async function handlePairingGateway(req){
   if(claim&&method==='POST'){
     try{
       const data=await bodyOf(req);
-      await durableConsumeApproval(claim[1],data.claimSecret);
+      await consumePairingApprovalSafe(claim[1],data.claimSecret);
       const session=createApprovedSession(['health:read','readiness:read','command:request']);
       return reply(200,{ok:true,...session});
     }catch(error){return reply(409,{ok:false,error:error?.message||'CLAIM_FAILED'});}
