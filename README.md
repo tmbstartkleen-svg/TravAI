@@ -1,8 +1,8 @@
-# TravAI Elite v13.9.0
+# TravAI Elite v13.10.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v13.9.0 — Durable Local Pairing Authority & Cross-Process Approval
+## v13.10.0 — Pairing End-to-End Certification & Durable Diagnostics
 TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
@@ -439,3 +439,10 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - The running loopback runtime consumes the one-time approval and creates the short-lived session in its own memory.
 - Consumed approvals cannot be replayed; expired approvals revert to pending.
 - Raw claim secrets and runtime session authority are never persisted.
+
+
+## v13.10.0 pairing certification and durable diagnostics
+- Pairing diagnostics now read the same durable request store used by browser requests and the local CLI.
+- Doctor and the local pairing gateway await the durable diagnostics path.
+- Added `npm run pair:certify` to verify protected file permissions, non-persistence of raw approval secrets and session authority, fresh approval after restart, local-only approval, single-use claims, and loopback runtime authority.
+- Added CI regression coverage for the pairing certification policy.
