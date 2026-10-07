@@ -1,5 +1,5 @@
-import {createPairingRequest,listPairingRequests,authorizeSession,revokeSession} from './pairing-authority-v956.mjs';
-import {claimApprovedSession} from './pairing-lifecycle-v1310.mjs';
+import {authorizeSession,revokeSession,createApprovedSession} from './pairing-authority-v956.mjs';
+import {durableCreateRequest,durableListRequests,durableConsumeApproval} from './pairing-state-v1390.mjs';
 import {pairingDiagnostics} from './pairing-diagnostics-v1330.mjs';
 
 function pathOf(req){try{return new URL(req.url,'http://127.0.0.1').pathname}catch{return ''}}
