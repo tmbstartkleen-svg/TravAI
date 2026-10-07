@@ -12,7 +12,8 @@ const locks=new Map();
 function withKeyLock(key,fn){
   const prev=locks.get(key)||Promise.resolve();
   const next=prev.then(fn,fn);
-  const tracked=next.finally(()=>{if(locks.get(key)===tracked)locks.delete(key);});
+  const settled=next.then(()=>undefined,()=>undefined);
+  const tracked=settled.finally(()=>{if(locks.get(key)===tracked)locks.delete(key);});
   locks.set(key,tracked);
   return next;
 }
