@@ -9,3 +9,6 @@ assert.equal(source.includes('exec('),false);
 assert.equal(source.includes('spawn('),false);
 assert.equal(source.includes('kill('),false);
 console.log('v13.4.0 local doctor boundary: PASS');
+
+assert.equal(source.includes("./local-bridge/runtime-lifecycle-v1150.mjs"),true);
+assert.equal(source.includes("./runtime-status-v1150.mjs"),false);
