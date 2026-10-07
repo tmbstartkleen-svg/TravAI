@@ -1,8 +1,8 @@
-# TravAI Elite v13.8.0
+# TravAI Elite v13.9.0
 
 TravAI is an offline-first local AI workstation with a web-safe Vercel control surface.
 
-## v13.8.0 — Trust Evidence Ledger & Runtime Continuity
+## v13.9.0 — Durable Local Pairing Authority & Cross-Process Approval
 TravAI combines a bounded macOS action executor, explicit local approval queue, persistent task recovery, and a web-safe control surface.
 
 Supported action types:
@@ -430,3 +430,12 @@ The Vercel surface remains a control/request interface. Actual Mac actions execu
 - Added `npm run runtime:continuity` to summarize release transitions and process restarts across recent certifications.
 - Doctor now includes continuity metadata so runtime trust history is visible alongside current trust state.
 - The ledger never stores session tokens, claim secrets, or approval IDs.
+
+
+## v13.9.0 durable local pairing authority
+- Browser pairing requests are written to a local 0600 state file under the existing 0700 TravAI state directory so separate CLI processes can see them.
+- Local CLI approval creates a short-lived one-time claim secret and persists only its SHA-256 hash.
+- The CLI no longer creates browser session authority.
+- The running loopback runtime consumes the one-time approval and creates the short-lived session in its own memory.
+- Consumed approvals cannot be replayed; expired approvals revert to pending.
+- Raw claim secrets and runtime session authority are never persisted.
