@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 const source=await readFile(new URL('../pair-local-v1300.mjs',import.meta.url),'utf8');
-assert.equal(source.includes('durableApproveRequest'),true);
+assert.equal(source.includes('approvePairingRequestSafe'),true);
 assert.equal(source.includes('sessionCreated:false'),true);
-assert.equal(source.includes('approvePairingRequest'),false);
+assert.equal(source.includes('durableApproveRequest'),false);
 assert.equal(source.includes('exec('),false);
 assert.equal(source.includes('spawn('),false);
 assert.equal(source.includes('http.createServer'),false);
-console.log('v13.10 local pairing CLI authority: PASS');
+console.log('v13.13 local pairing CLI integrity authority: PASS');
