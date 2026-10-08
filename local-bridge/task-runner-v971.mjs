@@ -1,17 +1,21 @@
 import {nextStep,recordStepResult} from './task-orchestrator-v970.mjs';
 import {executeMacAction,verifyMacAction} from './mac-action-executor-v971.mjs';
+import {appendAgentReceipt} from './agent-receipts-v1318.mjs';
 
 export async function runNextApprovedTaskStep(taskId,{approved=false,run}={}){
   const step=nextStep(taskId);
-  if (!step) return {done:true,taskId};
-
+  if(!step)return {done:true,taskId};
+  let output,verified=false,task,errorMessage;
   try{
-    const output=await executeMacAction(step,{approved,run});
-    const verified=verifyMacAction(step,output);
-    const task=recordStepResult(taskId,{ok:output.ok,result:output.result,verified});
-    return {done:task.status==='completed',step,output,verified,task};
+    output=await executeMacAction(step,{approved,run});
+    verified=verifyMacAction(step,output);
+    task=recordStepResult(taskId,{ok:output.ok,result:output.result,verified});
   }catch(error){
-    const task=recordStepResult(taskId,{ok:false,error:error?.message||String(error),verified:false});
-    return {done:false,step,error:error?.message||String(error),task};
+    errorMessage=error?.message||String(error);
+    task=recordStepResult(taskId,{ok:false,error:errorMessage,verified:false});
   }
+  const outcome=errorMessage||!output?.ok?'failed':verified?'executed':'verification-failed';
+  await appendAgentReceipt({taskId,stepId:step.id,action:step.action,result:outcome});
+  if(errorMessage)return {done:false,step,error:errorMessage,task};
+  return {done:task.status==='completed',step,output,verified,task};
 }
