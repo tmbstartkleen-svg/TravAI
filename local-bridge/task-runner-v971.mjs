@@ -15,7 +15,13 @@ export async function runNextApprovedTaskStep(taskId,{approved=false,run}={}){
     task=recordStepResult(taskId,{ok:false,error:errorMessage,verified:false});
   }
   const outcome=errorMessage||!output?.ok?'failed':verified?'executed':'verification-failed';
-  await appendAgentReceipt({taskId,stepId:step.id,action:step.action,result:outcome});
+  try{
+    await appendAgentReceipt({taskId,stepId:step.id,action:step.action,result:outcome});
+  }catch{
+    // The step has already been recorded. Never disguise an executed action as
+    // an unattempted one or invite an automatic retry on an audit disk failure.
+    return {done:task.status==='completed',step,output,verified,task,error:'AUDIT_WRITE_FAILED',auditFailed:true,executionAttempted:true};
+  }
   if(errorMessage)return {done:false,step,error:errorMessage,task};
   return {done:task.status==='completed',step,output,verified,task};
 }
