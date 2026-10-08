@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import {createApproval,decideApproval,consumeApproval,listApprovals,importApprovalState} from '../local-bridge/approval-queue-v972.mjs';
+import {createPairingRequest,approvePairingRequest} from '../local-bridge/pairing-authority-v956.mjs';
+import {handleRuntimeTaskRequest} from '../local-bridge/runtime-mount-v974.mjs';
+
+importApprovalState([]);
+const id='exact-action-approval';
+createApproval({id,taskId:'task',stepId:'step',action:'open-app'});
+assert.throws(()=>createApproval({id,taskId:'other',stepId:'step',action:'open-app'}),/APPROVAL_ID_REUSED/);
+decideApproval(id,'approve');
+assert.throws(()=>consumeApproval(id,{taskId:'task',stepId:'step',action:'quit-app'}),/APPROVAL_SCOPE_MISMATCH/);
+assert.equal(listApprovals().find(a=>a.id===id).status,'approved');
+consumeApproval(id,{taskId:'task',stepId:'step',action:'open-app'});
+assert.throws(()=>consumeApproval(id,{taskId:'task',stepId:'step',action:'open-app'}),/APPROVAL_INVALID/);
+
+const reqId='ab191919191919191919191919191919';
+createPairingRequest({requestId:reqId});
+const session=approvePairingRequest(reqId,['command:request']);
+const headers={'x-travai-session':session.sessionToken};
+const request=(method,url,body={})=>({method,url,body,headers});
+const created=await handleRuntimeTaskRequest(request('POST','/api/v974/tasks',{steps:[{action:'open-app',input:{app:'Safari'}}]}));
+assert.equal(created.status,201);
+const taskId=created.body.task.id;
+const approval=await handleRuntimeTaskRequest(request('POST',`/api/v974/tasks/${taskId}/approval`));
+assert.equal(approval.status,201);
+const approvalId=approval.body.approval.id;
+assert.equal((await handleRuntimeTaskRequest(request('POST',`/api/v974/approvals/${approvalId}`,{decision:'approve'}))).status,200);
+let executions=0;
+const run=async()=>{executions++;return {stdout:'',stderr:''}};
+const result=await handleRuntimeTaskRequest(request('POST',`/api/v974/tasks/${taskId}/execute`,{approvalId}),{run});
+assert.equal(result.status,200);
+assert.equal(executions,1);
+console.log('v13.18 exact-action approval regression: PASS');
