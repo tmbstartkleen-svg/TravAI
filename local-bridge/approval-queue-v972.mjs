@@ -15,6 +15,7 @@ export function createApproval({id,taskId,stepId,action}={}){
     createdAt:now(),
     expiresAt:now()+TTL_MS
   };
+  if(approvals.has(record.id)) throw new Error('APPROVAL_ID_REUSED');
   approvals.set(record.id,record);
   return copy(record);
 }
@@ -54,17 +55,18 @@ export function importApprovalState(records=[]){
 
 export function decideApproval(id,decision){
   const item=approvals.get(String(id||''));
-  if(!item || item.status!=='pending' || item.expiresAt<=now()) throw new Error('APPROVAL_NOT_PENDING');
+  if(!item || item.status!=='pending') throw new Error('APPROVAL_NOT_PENDING');
+  if(item.expiresAt<=now()){ item.status='expired'; throw new Error('APPROVAL_EXPIRED'); }
   if(!['approve','deny'].includes(decision)) throw new Error('INVALID_DECISION');
   item.status=decision==='approve'?'approved':'denied';
   item.decidedAt=now();
   return copy(item);
 }
 
-export function consumeApproval(id,{taskId,stepId}={}){
+export function consumeApproval(id,{taskId,stepId,action}={}){
   const item=approvals.get(String(id||''));
   if(!item || item.status!=='approved' || item.expiresAt<=now()) throw new Error('APPROVAL_INVALID');
-  if(item.taskId!==String(taskId||'') || item.stepId!==String(stepId||'')) throw new Error('APPROVAL_SCOPE_MISMATCH');
+  if(item.taskId!==String(taskId||'') || item.stepId!==String(stepId||'') || item.action!==String(action||'')) throw new Error('APPROVAL_SCOPE_MISMATCH');
   item.status='consumed';
   item.consumedAt=now();
   return copy(item);
