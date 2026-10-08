@@ -5,7 +5,7 @@ createApproval({id:'restore-approved',taskId:'task-a',stepId:'step-a',action:'op
 decideApproval('restore-approved','approve');
 createApproval({id:'restore-consumed',taskId:'task-b',stepId:'step-b',action:'open-app'});
 decideApproval('restore-consumed','approve');
-consumeApproval('restore-consumed',{taskId:'task-b',stepId:'step-b'});
+consumeApproval('restore-consumed',{taskId:'task-b',stepId:'step-b',action:'open-app'});
 
 const restored=importApprovalState(exportApprovalState());
 for(const id of ['restore-approved','restore-consumed']){
