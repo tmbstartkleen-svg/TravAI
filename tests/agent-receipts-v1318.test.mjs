@@ -19,5 +19,15 @@ assert.equal(found.action,'open-app');
 assert.equal(found.result,'executed');
 assert.equal('input' in found,false);
 assert.equal('output' in found,false);
+const failedTask=createTask({steps:[{action:'set-volume',input:{volume:50}}]});
+const failed=await runNextApprovedTaskStep(failedTask.id,{approved:true,run:async()=>{throw new Error('simulated-executor-failure')}});
+assert.equal(failed.done,false);
+assert.equal(failed.task.status,'retry-pending');
+assert.ok((await readAgentReceipts()).some(x=>x.taskId===failedTask.id&&x.result==='failed'));
+
+const unapprovedTask=createTask({steps:[{action:'toggle-mute',input:{muted:true}}]});
+const unapproved=await runNextApprovedTaskStep(unapprovedTask.id,{approved:false,run:async()=>{throw new Error('executor-should-not-run')}});
+assert.equal(unapproved.error,'LOCAL_APPROVAL_REQUIRED');
+assert.ok((await readAgentReceipts()).some(x=>x.taskId===unapprovedTask.id&&x.result==='failed'));
 await rm(testHome,{recursive:true,force:true});
 console.log('v13.18 execution receipts integration: PASS');
