@@ -1,8 +1,13 @@
 import assert from 'node:assert/strict';
 import {createApproval,decideApproval,consumeApproval,listApprovals,importApprovalState} from '../local-bridge/approval-queue-v972.mjs';
-import {readAgentReceipts} from '../local-bridge/agent-receipts-v1318.mjs';
+import {mkdtemp,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+const testHome=await mkdtemp(join(tmpdir(),'travai-approval-'));
+process.env.HOME=testHome;
+const {readAgentReceipts}=await import('../local-bridge/agent-receipts-v1318.mjs');
 import {createPairingRequest,approvePairingRequest} from '../local-bridge/pairing-authority-v956.mjs';
-import {handleRuntimeTaskRequest} from '../local-bridge/runtime-mount-v974.mjs';
+const {handleRuntimeTaskRequest}=await import('../local-bridge/runtime-mount-v974.mjs');
 
 importApprovalState([]);
 const id='exact-action-approval';
@@ -39,4 +44,5 @@ assert.equal(blocked.status,409);
 assert.equal(blocked.body.error,'APPROVAL_INVALID');
 assert.equal(executions,1);
 assert.ok((await readAgentReceipts()).some(x=>x.taskId===blockedId&&x.result==='blocked'));
+await rm(testHome,{recursive:true,force:true});
 console.log('v13.18 exact-action approval regression: PASS');
