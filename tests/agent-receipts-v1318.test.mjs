@@ -1,10 +1,13 @@
 import assert from 'node:assert/strict';
-import {mkdtemp,readFile,stat} from 'node:fs/promises';
+import {mkdtemp} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
+import {rm} from 'node:fs/promises';
 import {join} from 'node:path';
-import {createTask} from '../local-bridge/task-orchestrator-v970.mjs';
-import {runNextApprovedTaskStep} from '../local-bridge/task-runner-v971.mjs';
-import {readAgentReceipts} from '../local-bridge/agent-receipts-v1318.mjs';
+const testHome=await mkdtemp(join(tmpdir(),'travai-receipts-'));
+process.env.HOME=testHome;
+const {createTask}=await import('../local-bridge/task-orchestrator-v970.mjs');
+const {runNextApprovedTaskStep}=await import('../local-bridge/task-runner-v971.mjs');
+const {readAgentReceipts}=await import('../local-bridge/agent-receipts-v1318.mjs');
 
 const task=createTask({steps:[{action:'open-app',input:{app:'Safari'}}]});
 const result=await runNextApprovedTaskStep(task.id,{approved:true,run:async()=>({stdout:'',stderr:''})});
@@ -16,4 +19,5 @@ assert.equal(found.action,'open-app');
 assert.equal(found.result,'executed');
 assert.equal('input' in found,false);
 assert.equal('output' in found,false);
+await rm(testHome,{recursive:true,force:true});
 console.log('v13.18 execution receipts integration: PASS');
