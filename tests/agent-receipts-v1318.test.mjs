@@ -28,6 +28,7 @@ assert.ok((await readAgentReceipts()).some(x=>x.taskId===failedTask.id&&x.result
 const unapprovedTask=createTask({steps:[{action:'toggle-mute',input:{muted:true}}]});
 const unapproved=await runNextApprovedTaskStep(unapprovedTask.id,{approved:false,run:async()=>{throw new Error('executor-should-not-run')}});
 assert.equal(unapproved.error,'LOCAL_APPROVAL_REQUIRED');
+assert.equal(unapproved.task.status,'retry-pending');
 assert.ok((await readAgentReceipts()).some(x=>x.taskId===unapprovedTask.id&&x.result==='failed'));
 await rm(testHome,{recursive:true,force:true});
 console.log('v13.18 execution receipts integration: PASS');
