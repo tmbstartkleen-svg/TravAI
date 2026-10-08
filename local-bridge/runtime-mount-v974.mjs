@@ -63,7 +63,7 @@ export async function handleRuntimeTaskRequest(req,{run}={}){
       const readOnly=['read-health','read-readiness'].includes(step.action);
       let approved=readOnly && step.requiresApproval!==true;
       if(!approved){
-        consumeApproval(data.approvalId,{taskId,stepId:step.id});
+        consumeApproval(data.approvalId,{taskId,stepId:step.id,action:step.action});
         approved=true;
       }
       const result=await runNextApprovedTaskStep(taskId,{approved,run});
