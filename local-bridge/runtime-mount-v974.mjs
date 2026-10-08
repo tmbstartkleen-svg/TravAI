@@ -4,6 +4,7 @@ import {handleTaskApi} from './task-api-routes-v973.mjs';
 import {getTask} from './task-orchestrator-v970.mjs';
 import {consumeApproval} from './approval-queue-v972.mjs';
 import {runNextApprovedTaskStep} from './task-runner-v971.mjs';
+import {appendAgentReceipt} from './agent-receipts-v1318.mjs';
 
 function header(req,name){
   const key=String(name).toLowerCase();
@@ -70,7 +71,12 @@ export async function handleRuntimeTaskRequest(req,{run}={}){
       await savePersistentState();
       return response(200,{ok:!result.error,...result});
     }catch(error){
-      return response(409,{ok:false,error:error?.message||'EXECUTION_FAILED',task:getTask(taskId)});
+      const reason=error?.message||'EXECUTION_FAILED';
+      if(reason.startsWith('APPROVAL_')){
+        try{await appendAgentReceipt({taskId,stepId:step.id,action:step.action,result:'blocked'});}
+        catch{ return response(503,{ok:false,error:'AUDIT_WRITE_FAILED',task:getTask(taskId)}); }
+      }
+      return response(409,{ok:false,error:reason,task:getTask(taskId)});
     }
   }
 
