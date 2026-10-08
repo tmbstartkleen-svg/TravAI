@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {createApproval,decideApproval,consumeApproval,listApprovals,importApprovalState} from '../local-bridge/approval-queue-v972.mjs';
+import {readAgentReceipts} from '../local-bridge/agent-receipts-v1318.mjs';
 import {createPairingRequest,approvePairingRequest} from '../local-bridge/pairing-authority-v956.mjs';
 import {handleRuntimeTaskRequest} from '../local-bridge/runtime-mount-v974.mjs';
 
@@ -30,4 +31,12 @@ const run=async()=>{executions++;return {stdout:'',stderr:''}};
 const result=await handleRuntimeTaskRequest(request('POST',`/api/v974/tasks/${taskId}/execute`,{approvalId}),{run});
 assert.equal(result.status,200);
 assert.equal(executions,1);
+const blockedTask=await handleRuntimeTaskRequest(request('POST','/api/v974/tasks',{steps:[{action:'quit-app',input:{app:'Safari'}}]}));
+assert.equal(blockedTask.status,201);
+const blockedId=blockedTask.body.task.id;
+const blocked=await handleRuntimeTaskRequest(request('POST',`/api/v974/tasks/${blockedId}/execute`,{}),{run});
+assert.equal(blocked.status,409);
+assert.equal(blocked.body.error,'APPROVAL_INVALID');
+assert.equal(executions,1);
+assert.ok((await readAgentReceipts()).some(x=>x.taskId===blockedId&&x.result==='blocked'));
 console.log('v13.18 exact-action approval regression: PASS');
