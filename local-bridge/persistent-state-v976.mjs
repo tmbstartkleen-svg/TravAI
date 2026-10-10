@@ -1,6 +1,7 @@
 import os from 'node:os';
 import path from 'node:path';
 import fs from 'node:fs/promises';
+import crypto from 'node:crypto';
 import {exportTaskState,importTaskState} from './task-orchestrator-v970.mjs';
 import {exportApprovalState,importApprovalState} from './approval-queue-v972.mjs';
 import {exportScheduleState,importScheduleState} from './task-scheduler-v977.mjs';
@@ -11,9 +12,13 @@ const FILE=path.join(DIR,'runtime-state-v976.json');
 
 async function atomicWrite(file,data){
   await fs.mkdir(path.dirname(file),{recursive:true,mode:0o700});
-  const tmp=file+'.tmp';
-  await fs.writeFile(tmp,JSON.stringify(data,null,2),{encoding:'utf8',mode:0o600});
-  await fs.rename(tmp,file);
+  const tmp=file+'.tmp-'+process.pid+'-'+crypto.randomBytes(8).toString('hex');
+  try{
+    await fs.writeFile(tmp,JSON.stringify(data,null,2),{encoding:'utf8',mode:0o600});
+    await fs.rename(tmp,file);
+  }finally{
+    await fs.unlink(tmp).catch(error=>{if(error?.code!=='ENOENT')throw error;});
+  }
 }
 
 export async function savePersistentState(extra={}){
