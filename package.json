@@ -94,6 +94,7 @@
     "agent:status": "node agent-safety-v1318.mjs",
     "test:agent-safety": "node tests/agent-safety-v1318.test.mjs",
     "test:approval-action": "node tests/approval-action-v1318.test.mjs",
-    "test:agent-receipts": "node tests/agent-receipts-v1318.test.mjs"
+    "test:agent-receipts": "node tests/agent-receipts-v1318.test.mjs",
+    "launch:check": "node launch-gate-v1400.mjs"
   }
 }
