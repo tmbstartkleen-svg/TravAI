@@ -68,7 +68,7 @@ const server=http.createServer(async(req,res)=>{
       return;
     }
     await handler(req,res);
-  catch{if(!res.headersSent) send(res,500,{ok:false,error:'LOCAL_RUNTIME_ERROR'});}
+  }catch{if(!res.headersSent) send(res,500,{ok:false,error:'LOCAL_RUNTIME_ERROR'});}
 });
 const scheduler=startSchedulerLoop();
 
