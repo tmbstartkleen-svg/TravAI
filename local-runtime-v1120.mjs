@@ -10,6 +10,25 @@ import {releasePreflight} from './release-preflight-v1311.mjs';
 
 const HOST='127.0.0.1';
 const PORT=4783;
+const ALLOWED_ORIGINS=new Set([
+  'https://travai-one.vercel.app',
+  'https://travai-tmbstartkleen-4716s-projects.vercel.app',
+  'https://travai-git-main-tmbstartkleen-4716s-projects.vercel.app',
+  'https://travai-pxf7nd6fd-tmbstartkleen-4716s-projects.vercel.app'
+]);
+function applyCors(req,res){
+  const origin=String(req.headers.origin||'');
+  if(!ALLOWED_ORIGINS.has(origin))return false;
+  res.setHeader('Access-Control-Allow-Origin',origin);
+  res.setHeader('Vary','Origin');
+  res.setHeader('Access-Control-Allow-Methods','GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers','content-type, x-travai-session');
+  res.setHeader('Access-Control-Max-Age','600');
+  if(req.headers['access-control-request-private-network']==='true'){
+    res.setHeader('Access-Control-Allow-Private-Network','true');
+  }
+  return true;
+}
 const PROCESS_STARTED_AT=new Date().toISOString();
 const PREFLIGHT=await releasePreflight();
 if(!PREFLIGHT.ok) throw new Error('RELEASE_PREFLIGHT_FAILED');
@@ -41,7 +60,14 @@ await restorePersistentState();
 await resetPairingApprovalsSafe();
 const handler=createMountedTaskHandler(baseHandler);
 const server=http.createServer(async(req,res)=>{
-  try{await handler(req,res);}
+  try{
+    const allowed=applyCors(req,res);
+    if(req.method==='OPTIONS'){
+      res.writeHead(allowed?204:403,{'cache-control':'no-store'});
+      res.end();
+      return;
+    }
+    await handler(req,res);
   catch{if(!res.headersSent) send(res,500,{ok:false,error:'LOCAL_RUNTIME_ERROR'});}
 });
 const scheduler=startSchedulerLoop();
