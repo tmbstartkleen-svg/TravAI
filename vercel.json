@@ -24,12 +24,6 @@
       ]
     }
   ],
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/vercel-index.html"
-    }
-  ],
   "git": {
     "deploymentEnabled": false
   }
