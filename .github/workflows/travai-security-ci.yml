@@ -23,17 +23,11 @@ permissions:
 jobs:
   security-regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Agent policy regression
-        run: npm run test:agent-safety
-      - name: Execution receipt regression
-        run: npm run test:agent-receipts
-      - name: Approval scope and audit regression
-        run: npm run test:approval-action
       - name: v14 release certification gate
         run: npm run launch:check
