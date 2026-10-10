@@ -7,9 +7,11 @@ on:
       - 'tests/**'
       - 'agent-safety-v1318.mjs'
       - 'package.json'
+      - 'launch-gate-v1400.mjs'
       - '.github/workflows/travai-security-ci.yml'
   pull_request:
     paths:
+      - 'launch-gate-v1400.mjs'
       - 'local-bridge/**'
       - 'tests/**'
       - 'agent-safety-v1318.mjs'
@@ -33,5 +35,5 @@ jobs:
         run: npm run test:agent-receipts
       - name: Approval scope and audit regression
         run: npm run test:approval-action
-      - name: Full TravAI regression suite
-        run: npm test
+      - name: v14 release certification gate
+        run: npm run launch:check
