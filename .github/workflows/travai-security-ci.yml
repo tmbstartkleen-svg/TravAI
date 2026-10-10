@@ -30,4 +30,15 @@ jobs:
         with:
           node-version: '22'
       - name: v14 release certification gate
-        run: npm run launch:check
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run launch:check 2>&1 | tee travai-launch-certification.log
+      - name: Preserve certification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: travai-v14-certification-${{ github.run_id }}
+          path: travai-launch-certification.log
+          if-no-files-found: warn
+          retention-days: 14
