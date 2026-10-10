@@ -18,11 +18,28 @@ function token(){return sessionStorage.getItem('travai_session')||''}
 function auth(){return {'x-travai-session':token()}}
 function setPair(id){sessionStorage.setItem('travai_pair_request',id)}
 function getPair(){return sessionStorage.getItem('travai_pair_request')||''}
-async function pair(){const id=reqId();setPair(id);$('msg').textContent='Submitting '+id.slice(0,8)+'…';try{const x=await j('/api/v958/bridge/request',{method:'POST',body:JSON.stringify({requestId:id,label:'TravAI Vercel browser',scopes:['health:read','readiness:read','command:request']})});$('msg').textContent='Pairing pending. On your Mac open http://127.0.0.1:4783/bridge-v958.html and approve request '+id.slice(0,8)+'…';$('local').textContent='APPROVAL NEEDED';$('local').className='big warn'}catch(e){$('msg').textContent='Local bridge unavailable: '+e.message;$('local').textContent='OFFLINE';$('local').className='big bad'}}
-async function claim(){const id=getPair();if(!id){$('msg').textContent='Start pairing first.';return}try{const x=await j('/api/v958/bridge/claim',{method:'POST',body:JSON.stringify({requestId:id})});if(x.status==='pending'){$('msg').textContent='Still waiting for local approval.';return}sessionStorage.setItem('travai_session',x.sessionToken);$('session').textContent='PAIRED';$('session').className='big ok';$('local').textContent='CONNECTED';$('local').className='big ok';$('msg').textContent='Paired with scopes: '+x.scopes.join(', ')}catch(e){$('msg').textContent='Claim: '+e.message}}
-async function readHealth(){try{const x=await j('/api/v958/bridge/health',{headers:auth()});$('msg').textContent=JSON.stringify(x.health,null,2)}catch(e){$('msg').textContent='Health: '+e.message}}
-async function readiness(){try{const x=await j('/api/v958/bridge/readiness',{headers:auth()});$('msg').textContent=JSON.stringify(x.readiness,null,2)}catch(e){$('msg').textContent='Readiness: '+e.message}}
-async function command(){try{const x=await j('/api/v958/bridge/command/request',{method:'POST',headers:auth(),body:JSON.stringify({action:'run-readiness-check'})});$('cmdmsg').textContent='Request '+x.command.id+' is pending local approval. Review it on bridge-v958.html.'}catch(e){$('cmdmsg').textContent='Command request: '+e.message}}
+async function pair(){
+  $('msg').textContent='Requesting local pairing…';
+  $('requestPairing')?.click();
+  $('msg').textContent='Pairing requested using the local approval gateway. Run npm run pair:list on your Mac; approve the matching request, then enter the one-time secret in Local Pairing & Session.';
+}
+function claim(){ $('claimPairing')?.click(); $('msg').textContent='Claim the approved session using the one-time secret in Local Pairing & Session.'; }
+async function readHealth(){
+  try{
+    const x=await j('/health');
+    $('local').textContent=x.ok?'ONLINE':'OFFLINE';
+    $('local').className=x.ok?'big ok':'big bad';
+    $('msg').textContent=JSON.stringify(x,null,2);
+  }catch(e){$('local').textContent='OFFLINE';$('local').className='big bad';$('msg').textContent='Health: '+e.message;}
+}
+async function readiness(){
+  try{$('msg').textContent=JSON.stringify(await j('/api/v974/readiness',{headers:auth()}),null,2);}
+  catch(e){$('msg').textContent='Readiness: '+e.message+' (pair locally first if the API requires a session)';}
+}
+async function command(){
+  $('cmdmsg').textContent='Use the locally approved task controls after pairing. Legacy command endpoint disabled.';
+}
 $('pair').onclick=pair;$('check').onclick=claim;$('health').onclick=readHealth;$('ready').onclick=readiness;$('cmd').onclick=command;
+readHealth();
 if(token()){$('session').textContent='SESSION PRESENT';$('session').className='big ok'}
 </script><script src="/task-control-client-v972.js"></script></body></html>
